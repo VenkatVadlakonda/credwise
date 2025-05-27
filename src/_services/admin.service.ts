@@ -33,9 +33,13 @@ export class AdminService {
 
   ]
 
-  constructor() { }
+  constructor(private http:HttpClient) { }
 
   getLoanProducts():Observable<any>{
     return of(this.LoanProducts)
+  }
+
+  loginData(admin:{email:string,password:string}):Observable<Admin>{
+    return this.http.post<Admin>("https://localhost:7194/api/Auth/login",admin)
   }
 }

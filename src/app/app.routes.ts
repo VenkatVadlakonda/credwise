@@ -12,6 +12,7 @@ import { CreateloanComponent } from '../components/createloan/createloan.compone
 import { LoantypeComponent } from '../components/loantype/loantype.component';
 import { ReplaymentloanComponent } from '../components/replaymentloan/replaymentloan.component';
 import { FixeddepositComponent } from '../components/fixeddeposit/fixeddeposit.component';
+import { adminGuard } from '../_auth/admin.guard';
 
 export const routes: Routes = [
   {
@@ -27,10 +28,12 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+    
   },
   {
     path: 'repayment',
     component: RepaymentsComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'repayment/user/:userId',
@@ -43,29 +46,37 @@ export const routes: Routes = [
   {
     path: 'adduser',
     component: AdduserComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'userstatus',
     component: UserstatusComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'usermessage',
     component: UsermessageComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'documents',
     component: DocumentsComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'createloan',
     component: CreateloanComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'loantype',
     component: LoantypeComponent,
+    canActivate: [adminGuard],
   },
   {
-    path:'fd',component:FixeddepositComponent
+    path: 'fd',
+    component: FixeddepositComponent,
+    canActivate: [adminGuard],
   },
   {
     path: '**',

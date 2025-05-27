@@ -1,7 +1,9 @@
 export interface Admin{
-    name:string,
+    token:string,
     email:string,
+    name:string,
     phoneNumber:string,
-    password:string,
-    confirmPassword:string
+    role:string,
+    userId:number,
+    password:string 
 }

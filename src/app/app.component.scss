@@ -13,6 +13,7 @@
   font-weight: bold;
   float: right;
   margin-right: 20px;
+  
 
 }
 .menu-sidebar {
@@ -46,21 +47,11 @@
 
 .sidebar-logo img {
   display: inline-block;
-  height: 82px;
+  height: 72px;
   width: 52px;
   vertical-align: middle;
   // background-color: white;
 }
-.dot-indicator {
-  position: absolute;
-  top: 14px;
-  right: 12px;
-  height: 10px;
-  width: 10px;
-  background-color: red;
-  border-radius: 50%;
-}
-
 
 .sidebar-logo h1 {
   display: inline-block;
@@ -135,4 +126,64 @@ nz-content {
 .menu-sidebar[nz-collapsed='false'] .nav-pills li a i,
 .menu-sidebar[nz-collapsed='false'] .nav-pills li a .menu-label {
   display: inline;
+}
+
+/* Accordion container */
+#userAccordion {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+}
+
+/* Accordion item base */
+#userAccordion .accordion-item {
+  border: none;
+  background: transparent;
+}
+
+/* Remove default padding/margin, center items tighter */
+#userAccordion .accordion-button {
+  
+  
+  font-weight: bold;
+  // font-size: 14px;
+  background: transparent;
+  color: white;
+  box-shadow: none;
+  // display: flex;
+  // align-items: center;
+  // gap: 34px; /* reduce gap between text and arrow */
+}
+
+/* Add background only when expanded */
+#userAccordion .accordion-button:not(.collapsed) {
+  background-color: rgba(255, 255, 255, 0.1); /* subtle background */
+  color: #1890ff;
+  box-shadow: none;
+}
+
+/* Reduce padding inside dropdown */
+#userAccordion .accordion-body {
+  // padding: 1px 0;
+  background-color: white;
+  border-radius: 2px;
+  // box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style Logout button */
+#userAccordion .accordion-body button {
+  font-size: 13px;
+  padding: 2px 12px;
+  background-color: transparent;
+  border: 1px solid #f5222d;
+  color: #f5222d;
+  border-radius: 2px;
+  width: auto;
+  transition: all 0.2s;
+}
+
+#userAccordion .accordion-body button:hover {
+  background-color: #f5222d;
+  color: white;
 }

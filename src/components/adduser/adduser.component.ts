@@ -85,7 +85,7 @@ export class AdduserComponent implements OnInit {
   }
 
   loadUsers() {
-    this.userService.getAllUsers().subscribe({
+    this.userService.getUserApi().subscribe({
       next: (users) => {
         console.log(users);
         this.data = users;
@@ -107,7 +107,7 @@ export class AdduserComponent implements OnInit {
 
   handleOk(): void {
     if (this.userForm.valid) {
-      this.userService.getUsers(this.userForm.value).subscribe({
+      this.userService.postUserApi(this.userForm.value).subscribe({
         next: () => {
           this.modal.success({
             nzTitle: 'Success',
