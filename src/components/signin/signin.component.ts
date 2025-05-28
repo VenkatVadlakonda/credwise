@@ -1,26 +1,38 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { Router } from '@angular/router';
+import { AuthService } from '../../_services/auth.service';
+import { Admin } from '../../_models/admin.model';
+import { AdminService } from '../../_services/admin.service';
 
 @Component({
   selector: 'app-signin',
   imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
   templateUrl: './signin.component.html',
-  styleUrl: './signin.component.scss'
+  styleUrl: './signin.component.scss',
 })
-export class SigninComponent implements OnInit{
+export class SigninComponent implements OnInit {
   signinForm: FormGroup;
   isLoading = false;
   showPassword = false;
   errorMessage = '';
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private adminService: AdminService
+  ) {
     this.signinForm = this.fb.group({
-      adminId: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false],
     });
   }
 
@@ -30,46 +42,47 @@ export class SigninComponent implements OnInit{
     this.showPassword = !this.showPassword;
   }
 
-  onSubmit(): void {
-    if (this.signinForm.valid) {
-      this.isLoading = true;
-      this.errorMessage = '';
+ onSubmit(): void {
+  if (this.signinForm.valid) {
+    this.isLoading = true;
+    this.errorMessage = '';
 
-      // Here you would typically call your authentication service
-      // For example:
-      // this.authService.login(this.signinForm.value).subscribe({
-      //   next: (response) => {
-      //     this.router.navigate(['/dashboard']);
-      //   },
-      //   error: (error) => {
-      //     this.errorMessage = 'Invalid credentials. Please try again.';
-      //     this.isLoading = false;
-      //   }
-      // });
+    const credentials = {
+      email: this.signinForm.value.email,
+      password: this.signinForm.value.password
+    };
 
-      // For now, we'll just simulate a delay
-      setTimeout(() => {
+    this.authService.login(credentials).subscribe({
+      next: (admin: Admin) => {
+        console.log('Login response:', admin); // Debug log
         this.isLoading = false;
-        // Remove this in production and use actual authentication
-        if (
-          this.signinForm.value.adminId === 'admin' &&
-          this.signinForm.value.password === 'password'
-        ) {
-          this.router.navigate(['/dashboard']);
-        } else {
-          this.errorMessage = 'Invalid credentials. Please try again.';
-        }
-      }, 1000);
-    }
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error('Login error:', err); // Debug log
+        this.errorMessage = err.error?.message || 'Login failed';
+        this.isLoading = false;
+      }
+    });
+  } else {
+    this.errorMessage = 'Please fill in all required fields';
   }
+}
+
 
   getErrorMessage(controlName: string): string {
     const control = this.signinForm.get(controlName);
     if (control?.hasError('required')) {
-      return `${controlName} is required`;
+      return `${
+        controlName === 'adminemail' ? 'Email' : controlName
+      } is required`;
     }
     if (control?.hasError('minlength')) {
-      return `${controlName} must be at least ${control.errors?.['minlength'].requiredLength} characters`;
+      return `${
+        controlName === 'adminemail' ? 'Email' : controlName
+      } must be at least ${
+        control.errors?.['minlength'].requiredLength
+      } characters`;
     }
     return '';
   }

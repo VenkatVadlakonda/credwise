@@ -11,8 +11,14 @@ import { DocumentsComponent } from '../components/documents/documents.component'
 import { CreateloanComponent } from '../components/createloan/createloan.component';
 import { LoanTypesComponent } from '../components/loantype/loantype.component';
 import { ReplaymentloanComponent } from '../components/replaymentloan/replaymentloan.component';
-// import { FixeddepositComponent } from '../components/fixeddeposit/fixeddeposit.component';
+
+
 import { FDTypeComponent } from '../components/fixeddeposit/fixeddeposit.component';
+
+
+import { adminGuard } from '../_auth/admin.guard';
+
+
 export const routes: Routes = [
   {
     path: '',
@@ -27,10 +33,12 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+    
   },
   {
     path: 'repayment',
     component: RepaymentsComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'repayment/user/:userId',
@@ -43,31 +51,41 @@ export const routes: Routes = [
   {
     path: 'adduser',
     component: AdduserComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'userstatus',
     component: UserstatusComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'usermessage',
     component: UsermessageComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'documents',
     component: DocumentsComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'createloan',
     component: CreateloanComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'loantype',
+
     component: LoanTypesComponent,
   },
   {
     path:'fd',
     component:FDTypeComponent
+
+    component: LoantypeComponent,
+    canActivate: [adminGuard],
   },
+ 
   {
     path: '**',
     component: PagenotfoundComponent,

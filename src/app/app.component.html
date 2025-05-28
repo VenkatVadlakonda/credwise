@@ -44,7 +44,7 @@
           </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/fd">
-              <i class="fa-solid fa-land-mine-on"></i>Fixed Deposit</a
+              <i class="fa-solid fa-money-bill-transfer"></i>Fixed Deposit</a
             >
           </li>
         </ul>
@@ -92,7 +92,65 @@
           <span *ngIf="showDot" class="dot-indicator"></span>
         </span>
 
-        <span class="signin"><a href="/signin">Signin</a></span>
+        <!-- <span class="signin">
+          <ng-container *ngIf="!currentUser">
+            <a href="/signin">Signin</a>
+          </ng-container>
+          <ng-container *ngIf="currentUser">
+            <nz-dropdown [nzTrigger]="'click'" [nzPlacement]="'bottomRight'">
+              <a class="ant-dropdown-link" nz-dropdown>
+                Hi,
+                <span >{{
+                  currentUser.name
+                }}</span>
+                <i nz-icon nzType="down"></i>
+              </a>
+              <ul nz-menu>
+                <li nz-menu-item (click)="logout()">
+                  <i nz-icon nzType="logout"></i>
+                  Logout
+                </li>
+              </ul>
+            </nz-dropdown>
+          </ng-container>
+        </span> -->
+      <span class="signin">
+  <ng-container *ngIf="!currentUser">
+    <a routerLink="/signin">Signin</a>
+  </ng-container>
+
+  <ng-container *ngIf="currentUser">
+    <div class="accordion" id="userAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingUser">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseUser"
+            aria-expanded="false"
+            aria-controls="collapseUser"
+          >
+            Hi, {{ currentUser.name }}
+          </button>
+        </h2>
+        <div
+          id="collapseUser"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingUser"
+          data-bs-parent="#userAccordion"
+        >
+          <div class="accordion-body p-2">
+            <button class="btn btn-outline-danger btn-sm w-100" (click)="logout()">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</span>
+
       </div>
     </nz-header>
     <nz-content>

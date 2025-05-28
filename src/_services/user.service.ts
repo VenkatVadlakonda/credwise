@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { User } from '../_models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -122,10 +123,19 @@ userDetails=[
 ]
 
 
-private url="https://localhost:7194/api/admin/users/register"
+
+private url="http://localhost:5008/api/admin/users"
 
 
   constructor(private http:HttpClient) { }
+
+  getUserApi():Observable<User[]>{
+    return this.http.get<User[]>(this.url)
+  }
+
+  postUserApi(user:User):Observable<User>{
+    return this.http.post<User>(`${this.url}/register`,user)
+  }
 
   getLoanEnquires(){
     return this.LoanEnquiries;
