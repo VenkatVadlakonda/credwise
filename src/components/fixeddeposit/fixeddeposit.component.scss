@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  padding: 24px;
+}
+
+nz-table {
+  margin-top: 24px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #f0f1f2;
+}
+
+th, td {
+  text-align: left;
+  padding: 12px 16px !important;
+}
+
+button[nz-button] {
+  margin-right: 8px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+nz-modal form {
+  margin-top: 16px;
+}
+
+.modify-btn {
+  margin: 0 4px;
+  /* Do NOT set background, border, or color here */
+}

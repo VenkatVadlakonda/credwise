@@ -9,10 +9,15 @@ import { UsermessageComponent } from '../components/usermessage/usermessage.comp
 import { PagenotfoundComponent } from '../components/pagenotfound/pagenotfound.component';
 import { DocumentsComponent } from '../components/documents/documents.component';
 import { CreateloanComponent } from '../components/createloan/createloan.component';
-import { LoantypeComponent } from '../components/loantype/loantype.component';
+import { LoanTypesComponent } from '../components/loantype/loantype.component';
 import { ReplaymentloanComponent } from '../components/replaymentloan/replaymentloan.component';
-import { FixeddepositComponent } from '../components/fixeddeposit/fixeddeposit.component';
+
+
+import { FDTypeComponent } from '../components/fixeddeposit/fixeddeposit.component';
+
+
 import { adminGuard } from '../_auth/admin.guard';
+
 
 export const routes: Routes = [
   {
@@ -70,14 +75,17 @@ export const routes: Routes = [
   },
   {
     path: 'loantype',
+
+    component: LoanTypesComponent,
+  },
+  {
+    path:'fd',
+    component:FDTypeComponent
+
     component: LoantypeComponent,
     canActivate: [adminGuard],
   },
-  {
-    path: 'fd',
-    component: FixeddepositComponent,
-    canActivate: [adminGuard],
-  },
+ 
   {
     path: '**',
     component: PagenotfoundComponent,

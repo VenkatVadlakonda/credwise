@@ -1,1 +1,142 @@
-<p>loantype works!</p>
+
+<div *ngIf="loanTypes.length === 0">
+    <p>No loan types found or data is not loading.</p>
+  </div>
+  
+  <nz-table #loanTable [nzData]="loanTypes" nzBordered>
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Max Loan Amount</th>
+        <th>Loan Type</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let loan of loanTypes">
+        <td>{{ loan.id }}</td>
+        <td>{{ loan.title }}</td>
+        <td>{{ loan.maxLoanAmount }}</td>
+        <td>{{ loan.loanType }}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="openEditModal(loan)">
+            Modify
+          </button>
+          <!-- <button *ngIf="loan.isActive" nz-button nzType="default" nzDanger (click)="openDeactivateModal(loan)">
+            Deactivate
+          </button>
+          <button *ngIf="!loan.isActive" nz-button nzType="default" (click)="openActivateModal(loan)">
+            Activate
+          </button> -->
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  
+  <nz-modal
+    [(nzVisible)]="isEditModalVisible"
+    nzTitle="Edit Loan Product"
+    (nzOnCancel)="handleEditCancel()"
+    (nzOnOk)="handleEditOk()"
+    [nzOkDisabled]="!editForm"
+    [nzOkLoading]="false"
+  >
+    <ng-container *nzModalContent>
+      <form [formGroup]="editForm" *ngIf="editForm">
+        <div class="form-group">
+          <label>Title</label>
+          <input nz-input formControlName="title" />
+          <div *ngIf="editForm.get('title')?.invalid && editForm.get('title')?.touched" class="error-message">
+            Title is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Image URL</label>
+          <input nz-input formControlName="image" />
+          <div *ngIf="editForm.get('image')?.invalid && editForm.get('image')?.touched" class="error-message">
+            Image URL is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Max Loan Amount</label>
+          <input nz-input type="number" formControlName="maxLoanAmount" />
+          <div *ngIf="editForm.get('maxLoanAmount')?.invalid && editForm.get('maxLoanAmount')?.touched" class="error-message">
+            Max Loan Amount is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea nz-input formControlName="description" rows="3"></textarea>
+          <div *ngIf="editForm.get('description')?.invalid && editForm.get('description')?.touched" class="error-message">
+            Description is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Interest Rate (%)</label>
+          <input nz-input type="number" formControlName="interestRate" />
+        </div>
+
+        <div class="form-group">
+          <label>Tenure (Months)</label>
+          <input nz-input type="number" formControlName="tenureMonths" />
+        </div>
+
+        <div class="form-group">
+          <label>Processing Fee</label>
+          <input nz-input type="number" formControlName="processingFee" />
+        </div>
+
+        <div class="form-group" *ngIf="editForm.get('loanType')?.value === 'PERSONAL'">
+          <label>Min Salary Required</label>
+          <input nz-input type="number" formControlName="minSalaryRequired" />
+        </div>
+
+        <div class="form-group" *ngIf="editForm.get('loanType')?.value === 'HOME' && editForm.contains('downPaymentPercentage')">
+          <label>Down Payment Percentage</label>
+          <input nz-input type="number" formControlName="downPaymentPercentage" />
+        </div>
+
+        <div class="form-group" *ngIf="editForm.get('loanType')?.value === 'GOLD' && editForm.contains('goldPurityRequired')">
+          <label>Gold Purity Required</label>
+          <input nz-input formControlName="goldPurityRequired" />
+        </div>
+
+        <div class="form-group" *ngIf="editForm.get('loanType')?.value === 'GOLD' && editForm.contains('repaymentType')">
+          <label>Repayment Type</label>
+          <input nz-input formControlName="repaymentType" />
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <nz-switch formControlName="isActive"></nz-switch>
+        </div>
+      </form>
+    </ng-container>
+  </nz-modal>
+
+<style>
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.error-message {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+textarea {
+  width: 100%;
+}
+</style>

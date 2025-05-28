@@ -1,1 +1,65 @@
-<p>fixeddeposit works!</p>
+<nz-table #fdTable [nzData]="fdTypes" nzBordered>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name of FD</th>
+      <th>Interest Rate</th>
+      <th>Duration (months)</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let fd of fdTypes">
+      <td>{{ fd.fdtypeId }}</td>
+      <td>{{ fd.name }}</td>
+      <td>{{ fd.interestRate }}%</td>
+      <td>{{ fd.duration }}</td>
+      <td>
+        <button nz-button nzType="primary" class="modify-btn" (click)="openEditModal(fd)">Modify</button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<!-- Modal (use your modal library or Angular Material Dialog) -->
+<nz-modal
+
+  [(nzVisible)]="isEditModalVisible"
+  nzTitle="Edit FD Type"
+  (nzOnCancel)="handleEditCancel()"
+  (nzOnOk)="handleEditOk()"
+  [nzOkDisabled]="!editForm?.valid"
+  [nzOkLoading]="false"
+>
+  <form [formGroup]="editForm" *ngIf="editForm">
+    <div class="form-group">
+      <label>Name</label>
+      <input nz-input formControlName="name" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input nz-input formControlName="description" />
+    </div>
+    <div class="form-group">
+      <label>Interest Rate (%)</label>
+      <input nz-input type="number" formControlName="interestRate" />
+    </div>
+    <div class="form-group">
+      <label>Min Amount</label>
+      <input nz-input type="number" formControlName="minAmount" />
+    </div>
+    <div class="form-group">
+      <label>Max Amount</label>
+      <input nz-input type="number" formControlName="maxAmount" />
+    </div>
+    <div class="form-group">
+      <label>Duration (months)</label>
+      <input nz-input type="number" formControlName="duration" />
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <nz-switch formControlName="isActive"></nz-switch>
+    </div>
+  </form>
+  
+</nz-modal>

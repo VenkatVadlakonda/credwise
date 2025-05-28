@@ -10,10 +10,20 @@ export interface LoanDetail {
 
 export interface LoanProduct {
   id: number;
-  image: string;
+
+  loanProductId?: number;
   title: string;
-  description: string;
+  imageUrl: string;
   maxLoanAmount: number;
   loanType: string;
-  loanDetail: LoanDetail;
+  description:string;
+  isActive: boolean;
+  interestRate: number | null;
+  tenureMonths: number | null;
+  processingFee: number | null;
+  minSalaryRequired?: number | null;
+  downPaymentPercentage?: number | null;
+  goldPurityRequired?: string | null;
+  repaymentType: string | null;
 }
+
