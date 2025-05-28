@@ -1,4 +1,6 @@
 
+
+
 export interface LoanDetail {
   interestRate: number;
   tenureMonths: number;
@@ -10,7 +12,6 @@ export interface LoanDetail {
 
 export interface LoanProduct {
   id: number;
-
   loanProductId?: number;
   title: string;
   imageUrl: string;
@@ -25,5 +26,19 @@ export interface LoanProduct {
   downPaymentPercentage?: number | null;
   goldPurityRequired?: string | null;
   repaymentType: string | null;
+  loanDetail:LoanDetail
 }
 
+
+
+
+
+export interface LoanType {
+  id: number;
+  image: string;
+  title: string;
+  description: string;
+  maxLoanAmount: number;
+  loanType: string;
+  loanDetail: LoanDetail;
+}

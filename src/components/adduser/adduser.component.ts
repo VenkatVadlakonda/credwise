@@ -108,7 +108,8 @@ export class AdduserComponent implements OnInit {
   handleOk(): void {
     if (this.userForm.valid) {
       this.userService.postUserApi(this.userForm.value).subscribe({
-        next: () => {
+        next: (data) => {
+          console.log(data)
           this.modal.success({
             nzTitle: 'Success',
             nzContent: 'User registered successfully!',
@@ -116,6 +117,7 @@ export class AdduserComponent implements OnInit {
           this.isModalVisible = false;
           this.userForm.reset();
           this.loadUsers();
+          this.userService.sendEmailPass(data)
         },
         error: (error) => {
           this.modal.error({

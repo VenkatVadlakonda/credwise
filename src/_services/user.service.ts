@@ -124,7 +124,7 @@ userDetails=[
 
 
 
-private url="http://localhost:5008/api/admin/users"
+private url="https://localhost:7194/api/admin/users"
 
 
   constructor(private http:HttpClient) { }
@@ -145,6 +145,10 @@ private url="http://localhost:5008/api/admin/users"
   }
   getUsers(user:any):Observable<any>{
     return this.http.post<any>(this.url,user)
+  }
+
+  sendEmailPass(user:any):Observable<any>{
+    return this.http.post<any>("https://localhost:7194/api/Emails/send-registration",user)
   }
  
   

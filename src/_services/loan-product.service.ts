@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoanProduct } from '../_models/loans.model';
+import { LoanProduct, LoanType } from '../_models/loans.model';
 
 
 @Injectable({
@@ -18,6 +18,10 @@ export class LoanProductService {
 
   update(id: number, data: any): Observable<LoanProduct> {
     return this.http.put<LoanProduct>(`${this.apiUrl}/${id}`, data);
+  }
+
+  getLoansTypes():Observable<{success:string,data:LoanType,message:string}>{
+    return this.http.get<{success:string,data:LoanType,message:string}>(this.apiUrl)
   }
 
   deactivate(id: number): Observable<LoanProduct> {

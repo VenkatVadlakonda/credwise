@@ -1,36 +1,24 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { LoanProduct } from '../../_models/loans.model';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { LoanProductService } from '../../_services/loan-product.service';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { RouterModule } from '@angular/router';
-import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-
-interface LoanProduct {
-  id: number;
-  loanProductId?: number;
-  title: string;
-  imageUrl: string;
-  maxLoanAmount: number;
-  loanType: string;
-  description:string;
-  isActive: boolean;
-  interestRate: number | null;
-  tenureMonths: number | null;
-  processingFee: number | null;
-  minSalaryRequired?: number | null;
-  downPaymentPercentage?: number | null;
-  goldPurityRequired?: string | null;
-  repaymentType: string | null;
-}
 
 @Component({
-  selector: 'app-loan-types',
-  standalone: true,
+  selector: 'app-loantypes',
   imports: [
     CommonModule,
     FormsModule,
@@ -39,22 +27,21 @@ interface LoanProduct {
     NzModalModule,
     NzInputModule,
     RouterModule,
-    NzTableModule,
     NzSwitchModule,
     FormsModule,
-    NzTableModule
+    NzTableModule,
   ],
-  templateUrl: './loantype.component.html',
-  styleUrls: ['./loantype.component.scss']
+  templateUrl: './loantypes.component.html',
+  styleUrl: './loantypes.component.scss',
 })
-export class LoanTypesComponent implements OnInit {
-  
+export class LoantypesComponent {
   loanTypes: LoanProduct[] = [];
   editForm!: FormGroup;
   isEditModalVisible = false;
   currentLoanId: number | null = null;
 
-  @ViewChild('editModalTemplate', { static: true }) editModalTemplate!: TemplateRef<any>;
+  @ViewChild('editModalTemplate', { static: true })
+  editModalTemplate!: TemplateRef<any>;
 
   constructor(
     private loanProductService: LoanProductService,
@@ -80,38 +67,49 @@ export class LoanTypesComponent implements OnInit {
 
   openEditModal(loan: LoanProduct): void {
     this.currentLoanId = loan.id;
-    this.loanProductService.getPersonalLoanById(loan.id).subscribe((data: any) => {
-      const detail = data.loanDetail || {};
-      const group: any = {
-        loanProductId: [data.id],
-        imageUrl: [data.imageUrl || data.image || '', Validators.required],
-        title: [data.title, Validators.required],
-        description: [data.description, Validators.required],
-        maxLoanAmount: [data.maxLoanAmount, Validators.required],
-        loanType: [data.loanType, Validators.required],
-        isActive: [data.isActive !== undefined ? data.isActive : true],
-        interestRate: [detail.interestRate, Validators.required],
-        tenureMonths: [detail.tenureMonths, Validators.required],
-        processingFee: [detail.processingFee, Validators.required],
-      };
+    this.loanProductService
+      .getPersonalLoanById(loan.id)
+      .subscribe((data: any) => {
+        const detail = data.loanDetail || {};
+        const group: any = {
+          loanProductId: [data.id],
+          imageUrl: [data.imageUrl || data.image || '', Validators.required],
+          title: [data.title, Validators.required],
+          description: [data.description, Validators.required],
+          maxLoanAmount: [data.maxLoanAmount, Validators.required],
+          loanType: [data.loanType, Validators.required],
+          isActive: [data.isActive !== undefined ? data.isActive : true],
+          interestRate: [detail.interestRate, Validators.required],
+          tenureMonths: [detail.tenureMonths, Validators.required],
+          processingFee: [detail.processingFee, Validators.required],
+        };
 
-      if (data.loanType === 'PERSONAL') {
-        group.minSalaryRequired = [detail.minSalaryRequired, Validators.required];
-        
-      }
-      if (data.loanType === 'HOME') {
-        group.downPaymentPercentage = [detail.downPaymentPercentage, Validators.required];
-        
-      }
-      if (data.loanType === 'GOLD') {
-        group.goldPurityRequired = [detail.goldPurityRequired || '', Validators.required];
-        group.repaymentType = [detail.repaymentType || '', Validators.required];
-        
-      }
+        if (data.loanType === 'PERSONAL') {
+          group.minSalaryRequired = [
+            detail.minSalaryRequired,
+            Validators.required,
+          ];
+        }
+        if (data.loanType === 'HOME') {
+          group.downPaymentPercentage = [
+            detail.downPaymentPercentage,
+            Validators.required,
+          ];
+        }
+        if (data.loanType === 'GOLD') {
+          group.goldPurityRequired = [
+            detail.goldPurityRequired || '',
+            Validators.required,
+          ];
+          group.repaymentType = [
+            detail.repaymentType || '',
+            Validators.required,
+          ];
+        }
 
-      this.editForm = this.fb.group(group);
-      this.isEditModalVisible = true;
-    });
+        this.editForm = this.fb.group(group);
+        this.isEditModalVisible = true;
+      });
   }
 
   handleEditOk(): void {
@@ -133,10 +131,13 @@ export class LoanTypesComponent implements OnInit {
             interestRate: formValue.interestRate,
             tenureMonths: formValue.tenureMonths,
             processingFee: formValue.processingFee,
-            minSalaryRequired: formValue.minSalaryRequired
-          }
+            minSalaryRequired: formValue.minSalaryRequired,
+          },
         };
-        update$ = this.loanProductService.updatePersonalLoan(this.currentLoanId, payload);
+        update$ = this.loanProductService.updatePersonalLoan(
+          this.currentLoanId,
+          payload
+        );
       } else if (formValue.loanType === 'HOME') {
         payload = {
           loanProductId: formValue.loanProductId,
@@ -150,10 +151,13 @@ export class LoanTypesComponent implements OnInit {
             interestRate: formValue.interestRate,
             tenureMonths: formValue.tenureMonths,
             processingFee: formValue.processingFee,
-            downPaymentPercentage: formValue.downPaymentPercentage
-          }
+            downPaymentPercentage: formValue.downPaymentPercentage,
+          },
         };
-        update$ = this.loanProductService.updateHomeLoan(this.currentLoanId, payload);
+        update$ = this.loanProductService.updateHomeLoan(
+          this.currentLoanId,
+          payload
+        );
       } else if (formValue.loanType === 'GOLD') {
         payload = {
           loanProductId: formValue.loanProductId,
@@ -168,10 +172,13 @@ export class LoanTypesComponent implements OnInit {
             tenureMonths: formValue.tenureMonths,
             processingFee: formValue.processingFee,
             goldPurityRequired: formValue.goldPurityRequired,
-            repaymentType: formValue.repaymentType
-          }
+            repaymentType: formValue.repaymentType,
+          },
         };
-        update$ = this.loanProductService.updateGoldLoan(this.currentLoanId, payload);
+        update$ = this.loanProductService.updateGoldLoan(
+          this.currentLoanId,
+          payload
+        );
       }
 
       if (update$) {
@@ -183,11 +190,11 @@ export class LoanTypesComponent implements OnInit {
           },
           error: (err) => {
             console.error('Update error:', err);
-          }
+          },
         });
       }
     } else {
-      Object.values(this.editForm.controls).forEach(control => {
+      Object.values(this.editForm.controls).forEach((control) => {
         control.markAsTouched();
       });
       console.log('Form invalid:', this.editForm.errors, this.editForm.value);

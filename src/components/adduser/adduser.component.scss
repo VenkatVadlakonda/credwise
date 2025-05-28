@@ -5,7 +5,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
 
     h2 {
       margin: 0;
@@ -42,7 +42,15 @@
     margin-bottom: 16px;
   }
 
+  .ant-form-label {
+    font-weight: 500;
+  }
+
   .ant-modal-body {
-    padding: 24px;
+    padding: 20px;
+  }
+
+  input[nz-input] {
+    width: 100%;
   }
 }

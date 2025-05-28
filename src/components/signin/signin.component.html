@@ -5,33 +5,7 @@
     </div>
 
     <form [formGroup]="signinForm" (ngSubmit)="onSubmit()" class="signin-form">
-      <!-- Admin ID Field -->
-      <!-- <div class="form-group">
-        <label for="adminId">Admin ID</label>
-        <div class="input-group">
-          <i class="fas fa-user"></i>
-          <input
-            type="text"
-            id="adminId"
-            formControlName="adminId"
-            placeholder="Enter your admin ID"
-            [class.error]="
-              signinForm.get('adminId')?.invalid &&
-              signinForm.get('adminId')?.touched
-            "
-          />
-        </div>
-        <div
-          class="error-message"
-          *ngIf="
-            signinForm.get('adminId')?.invalid &&
-            signinForm.get('adminId')?.touched
-          "
-        >
-          {{ getErrorMessage("adminId") }}
-        </div>
-      </div> -->
-      <!-- Admin Email Field -->
+      
       <div class="form-group">
         <label for="adminId">Admin Email</label>
         <div class="input-group">

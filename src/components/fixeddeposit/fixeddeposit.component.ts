@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FDTypeService } from '../../_services/fdtype.service';
-import { FDType } from '../../_models/fdtype.model';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FDType } from '../../_models/fdtype.model';
+import { FDTypeService } from '../../_services/fdtype.service';
 import { CommonModule } from '@angular/common';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -11,10 +11,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 
 @Component({
-  selector: 'app-fdtype',
-  standalone: true,
-  imports: [
-    CommonModule,
+  selector: 'app-fixeddeposit',
+  imports: [CommonModule,
     FormsModule,
     ReactiveFormsModule,
     NzModalModule,
@@ -22,12 +20,11 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     RouterModule,
     NzTableModule,
     NzButtonModule,
-    NzSwitchModule
-  ],
+    NzSwitchModule],
   templateUrl: './fixeddeposit.component.html',
-  styleUrls: ['./fixeddeposit.component.scss']
+  styleUrl: './fixeddeposit.component.scss'
 })
-export class FDTypeComponent implements OnInit {
+export class FixeddepositComponent {
   fdTypes: FDType[] = [];
   editForm!: FormGroup;
   isEditModalVisible = false;
@@ -86,4 +83,5 @@ export class FDTypeComponent implements OnInit {
   handleEditCancel() {
     this.isEditModalVisible = false;
   }
+
 }

@@ -5,6 +5,8 @@ import { LoanService } from '../../_services/loan.service';
 import { CommonModule } from '@angular/common';
 import { ChartComponent } from '../../shared/components/chart/chart.component';
 import { TableComponent } from "../../shared/components/table/table.component";
+import { LoanProductService } from '../../_services/loan-product.service';
+import {  LoanType } from '../../_models/loans.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,16 +15,22 @@ import { TableComponent } from "../../shared/components/table/table.component";
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
-  loanType: any;
+  loanType: LoanType[]=[];
   emiplans: any;
-  private adminService = inject(AdminService);
+  
+  private loanTypeService=inject(LoanProductService)
   private loanService = inject(LoanService);
 
-  ngOnInit(): void {
-    this.adminService.getLoanProducts().subscribe(data=>{
-      console.log(data)
-      
-    });
-    this.emiplans = this.loanService.getEmiPlans();
-  }
+ ngOnInit(): void {
+  this.loanTypeService.getLoansTypes().subscribe(response => {
+    console.log(response);
+    if (response && Array.isArray(response.data)) {
+      this.loanType = response.data;
+    }
+  });
+
+  this.emiplans = this.loanService.getEmiPlans();
+}
+
+
 }
