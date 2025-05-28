@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.adminService.getLoanProducts().subscribe(data=>{
       console.log(data)
-      this.loanType = data
+      
     });
     this.emiplans = this.loanService.getEmiPlans();
   }

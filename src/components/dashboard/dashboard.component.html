@@ -1,23 +1,23 @@
 <div class="loan-carousel-wrapper">
   <nz-carousel nzAutoPlay>
-    @for (loan of loanType; track loan.LoanProductId) {
-    <div nz-carousel-content class="content">
+   
+    <div nz-carousel-content class="content" *ngFor="let loan of loanType">
       <div class="loan-card">
         <div>
-          <h2 class="loan-title">{{ loan.Title }}</h2>
-          <p class="loan-amount">₹{{ loan.MaxLoanAmount }}</p>
-          <p class="loan-description">{{ loan.Description }}</p>
+          <h2 class="loan-title">{{ loan.title }}</h2>
+          <p class="loan-amount">₹{{ loan.maxLoanAmount }}</p>
+          <p class="loan-description">{{ loan.description }}</p>
         </div>
         <div class="image">
           <img
-            [src]="loan.ImageUrl"
-            [alt]="loan.Title"
+            [src]="loan.image"
+            [alt]="loan.title"
             
           />
         </div>
       </div>
     </div>
-    }
+    
   </nz-carousel>
 </div>
 
