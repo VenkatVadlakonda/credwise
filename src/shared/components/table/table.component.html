@@ -1,4 +1,4 @@
-<div class="table-container">
+<!-- <div class="table-container">
   <table class="data-table">
     <thead>
       <tr>
@@ -24,6 +24,50 @@
                 "
               >
               </ng-container>
+            </span>
+            <span *ngSwitchDefault>{{ row[column.field] }}</span>
+          </ng-container>
+        </td>
+        <td *ngIf="actions">
+          <ng-container
+            *ngTemplateOutlet="actionTemplate || null; context: { $implicit: row }"
+          ></ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="loading" class="loading-overlay">Loading...</div>
+</div> -->
+<div class="table-container">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th *ngFor="let column of columns" [style.width]="column.width">
+          {{ column.header }}
+        </th>
+        <th *ngIf="actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of data" (click)="onRowClick(row)">
+        <td *ngFor="let column of columns">
+          <ng-container [ngSwitch]="column.type">
+            <span *ngSwitchCase="'date'">{{ row[column.field] | date }}</span>
+            <span *ngSwitchCase="'number'">{{ row[column.field] | number }}</span>
+            <span *ngSwitchCase="'button'">
+              <app-button
+                [label]="column.buttonText || ''"
+                [variant]="column.buttonVariant || 'primary'"
+                (onClick)="column.buttonAction?.(row)"
+              ></app-button>
+            </span>
+            <span *ngSwitchCase="'custom'">
+              <ng-container
+                *ngTemplateOutlet="
+                  column.customTemplate || null;
+                  context: { $implicit: row }
+                "
+              ></ng-container>
             </span>
             <span *ngSwitchDefault>{{ row[column.field] }}</span>
           </ng-container>

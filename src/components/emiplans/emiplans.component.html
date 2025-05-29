@@ -1,0 +1,101 @@
+<div class="emi-plans-container">
+  <div class="header">
+    <h2>EMI Plans</h2>
+  </div>
+
+  <div class="sections">
+    <div class="existing-plans">
+      <app-table [columns]="columns" [data]="emiPlans" [loading]="false">
+      </app-table>
+    </div>
+  </div>
+
+  <nz-modal
+    [(nzVisible)]="isModalVisible"
+    nzTitle="Create EMI Plan"
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()"
+  >
+    <ng-container *nzModalContent>
+      <form nz-form [nzLayout]="'vertical'">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Loan ID</nz-form-label>
+          <nz-form-control [nzSpan]="24">
+            <input nz-input [ngModel]="emiForm.loanId" disabled />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired
+            >Tenure (Months)</nz-form-label
+          >
+          <nz-form-control [nzSpan]="24">
+            <input
+              nz-input
+              type="number"
+              [(ngModel)]="emiForm.tenureInMonths"
+              [disabled]="true"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired
+            >Interest Rate (%)</nz-form-label
+          >
+          <nz-form-control [nzSpan]="24">
+            <input
+              nz-input
+              type="number"
+              [(ngModel)]="emiForm.interestRate"
+              [disabled]="true"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Loan Amount</nz-form-label>
+          <nz-form-control [nzSpan]="24">
+            <input
+              nz-input
+              type="number"
+              [(ngModel)]="emiForm.loanAmount"
+              [disabled]="true"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Start Date</nz-form-label>
+          <nz-form-control [nzSpan]="24">
+            <nz-date-picker
+              [(ngModel)]="emiForm.startDate"
+              nzFormat="yyyy-MM-dd"
+            ></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item
+          *ngIf="
+            emiForm.loanAmount && emiForm.interestRate && emiForm.tenureInMonths
+          "
+        >
+          <nz-form-label [nzSpan]="24">Monthly EMI</nz-form-label>
+          <nz-form-control [nzSpan]="24">
+            <input
+              nz-input
+              [value]="
+                calculateEMI(
+                  emiForm.loanAmount,
+                  emiForm.interestRate,
+                  emiForm.tenureInMonths
+                ) | currency : 'INR'
+              "
+              disabled
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-container>
+  </nz-modal>
+</div>

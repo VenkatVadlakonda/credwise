@@ -19,6 +19,7 @@ import { ReplaymentloanComponent } from '../components/replaymentloan/replayment
 import { adminGuard } from '../_auth/admin.guard';
 import { LoantypesComponent } from '../components/loantypes/loantypes.component';
 import { FixeddepositComponent } from '../components/fixeddeposit/fixeddeposit.component';
+import { EmiplansComponent } from '../components/emiplans/emiplans.component';
 
 
 export const routes: Routes = [
@@ -86,6 +87,11 @@ export const routes: Routes = [
     component:FixeddepositComponent,
     canActivate: [adminGuard]
 
+  },
+  {
+    path:'emiplan',
+    component:EmiplansComponent,
+    canActivate: [adminGuard]
   },
  
   {

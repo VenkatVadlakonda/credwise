@@ -5,6 +5,7 @@ import {
   TableColumn,
 } from '../../shared/components/table/table.component';
 import { UserService } from '../../_services/user.service';
+import { LoanEnquiry } from '../../_models/loans.model';
 
 @Component({
   selector: 'app-usermessage',
@@ -15,24 +16,28 @@ import { UserService } from '../../_services/user.service';
 })
 export class UsermessageComponent implements OnInit {
   columns: TableColumn[] = [
-    { header: 'Name', field: 'Name', width: '200px' },
-    { header: 'Phone Number', field: 'PhoneNumber', width: '150px' },
+    { header: 'Name', field: 'name', width: '200px' },
+    { header: 'Phone Number', field: 'phoneNumber', width: '150px' },
     {
       header: 'Loan Amount',
-      field: 'LoanAmountRequired',
+      field: 'loanAmountRequired',
       type: 'number',
       width: '150px',
     },
-    { header: 'Purpose', field: 'LoanPurpose', width: '200px' },
-    { header: 'Created At', field: 'CreatedAt', type: 'date', width: '180px' },
+    { header: 'Purpose', field: 'loanPurpose', width: '200px' },
+    { header: 'Created At', field: 'createdAt', type: 'date', width: '180px' },
   ];
 
-  data: any[] = [];
+  data: LoanEnquiry[] = [];
 
   constructor(private userService: UserService) {}
 
   ngOnInit() {
-    this.data = this.userService.getLoanEnquires();
+    this.userService.getLoanEnquires().subscribe(response=>{
+      if (response && Array.isArray(response.data)) {
+        this.data = response.data;
+      }
+    })
   }
 
   onRowClick(row: any): void {

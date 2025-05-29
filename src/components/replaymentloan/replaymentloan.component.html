@@ -46,20 +46,20 @@
         <h2>EMI Schedule</h2>
         <app-table [columns]="emiColumns" [data]="emis" [actions]="true">
           <ng-template #actionTemplate let-item>
-            <app-button
-              *ngIf="item.Status === 'Pending'"
-              variant="primary"
-              (click)="payEmi(item)"
-            >
-              Pay EMI
-            </app-button>
-            <app-button
-              *ngIf="item.Status === 'Overdue'"
-              variant="secondary"
-              (click)="addFine(item)"
+            <button
+              *ngIf="
+                item.Status === 'Overdue' && (!item.Fine || item.Fine === 0)
+              "
+              (click)="addFine(item, 300)"
+              class="btn btn-warning"
             >
               Add Fine
-            </app-button>
+            </button>
+            <span *ngIf="item.Status === 'Paid'">Paid</span>
+            <span *ngIf="item.Status === 'Pending'">Pending</span>
+            <span *ngIf="item.Status === 'Overdue' && item.Fine"
+              >Fine Added: {{ item.Fine }}</span
+            >
           </ng-template>
         </app-table>
       </div>

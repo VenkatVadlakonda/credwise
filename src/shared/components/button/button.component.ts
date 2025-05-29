@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -13,7 +13,8 @@ export class ButtonComponent {
   @Input() variant: 'primary' | 'secondary' = 'primary';
   @Input() disabled: boolean = false;
   @Input() loading: boolean = false;
-  @Input() onClick: (event: MouseEvent) => void = () => {};
+  // @Input() onClick: (event: MouseEvent) => void = () => {};
+  @Output() onClick = new EventEmitter<MouseEvent>();
   @Input() ngStyle: { [key: string]: any } = {};
   @Input() ngClass!: string | string[] | Set<string> | { [klass: string]: any; };
 

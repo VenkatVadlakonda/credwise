@@ -1,4 +1,4 @@
-<button
+<!-- <button
       [type]="type"
       [class]="buttonClass"
       [disabled]="disabled || loading"
@@ -8,4 +8,15 @@
     >
       <span *ngIf="!loading">{{ label }}</span>
       <span *ngIf="loading" class="loading-spinner"></span>
-    </button>
+    </button> -->
+    <button
+  [type]="type"
+  [class]="buttonClass"
+  [disabled]="disabled || loading"
+  (click)="onClick.emit($event)"
+  [ngClass]="ngClass"
+  [ngStyle]="ngStyle"
+>
+  <span *ngIf="!loading">{{ label }}</span>
+  <span *ngIf="loading" class="loading-spinner"></span>
+</button>

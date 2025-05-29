@@ -8,6 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { Router } from '@angular/router';
+import { RepaymentPlanDTO } from '../../_models/repayment-plan.model';
 
 @Component({
   selector: 'app-repayments',
@@ -30,22 +31,21 @@ export class RepaymentsComponent implements OnInit {
     { header: 'Phone', field: 'phoneNumber', type: 'text' },
   ];
 
-  // loanColumns: TableColumn[] = [
-  //   { header: 'Loan ID', field: 'LoanApplicationId', type: 'number' },
-  //   { header: 'Product', field: 'LoanProductId', type: 'number' },
-  //   { header: 'Amount', field: 'RequestedAmount', type: 'number' },
-  //   { header: 'Status', field: 'Status', type: 'text' },
-  // ];
+  loanColumns: TableColumn[] = [
+    { header: 'Loan ID', field: 'LoanApplicationId', type: 'number' },
+    { header: 'Product', field: 'LoanProductId', type: 'number' },
+    { header: 'Amount', field: 'RequestedAmount', type: 'number' },
+    { header: 'Status', field: 'Status', type: 'text' },
+  ];
 
-  // emiColumns: TableColumn[] = [
-  //   { header: 'EMI #', field: 'InstallmentNumber', type: 'number' },
-  //   { header: 'Due Date', field: 'DueDate', type: 'date' },
-  //   { header: 'Principal', field: 'PrincipalAmount', type: 'number' },
-  //   { header: 'Interest', field: 'InterestAmount', type: 'number' },
-  //   { header: 'Total', field: 'TotalAmount', type: 'number' },
-  //   { header: 'Status', field: 'Status', type: 'text' },
-  //   { header: 'Fine', field: 'Fine', type: 'number' },
-  // ];
+  emiColumns: TableColumn[] = [
+    { header: 'EMI #', field: 'InstallmentNumber', type: 'number' },
+    { header: 'Due Date', field: 'DueDate', type: 'date' },
+    { header: 'Principal', field: 'PrincipalAmount', type: 'number' },
+    { header: 'Interest', field: 'InterestAmount', type: 'number' },
+    { header: 'Total', field: 'TotalAmount', type: 'number' },
+    { header: 'Remaining', field: 'RemainingBalance', type: 'number' },
+  ];
 
   constructor(
     private userService: UserService,
@@ -75,5 +75,35 @@ export class RepaymentsComponent implements OnInit {
 
   onLoanSelect(loan: any) {
     this.router.navigate(['/repayment/loan', loan.LoanApplicationId]);
+  }
+
+  fetchEmis(loanId: number) {
+    // Dummy data for RepaymentPlanDTO
+    this.emis = [
+      {
+        InstallmentNumber: 1,
+        DueDate: new Date(2024, 2, 15).toISOString(),
+        PrincipalAmount: 5000,
+        InterestAmount: 500,
+        TotalAmount: 5500,
+        RemainingBalance: 45000,
+      },
+      {
+        InstallmentNumber: 2,
+        DueDate: new Date(2024, 3, 15).toISOString(),
+        PrincipalAmount: 5000,
+        InterestAmount: 500,
+        TotalAmount: 5500,
+        RemainingBalance: 40000,
+      },
+      {
+        InstallmentNumber: 3,
+        DueDate: new Date(2024, 4, 15).toISOString(),
+        PrincipalAmount: 5000,
+        InterestAmount: 500,
+        TotalAmount: 5500,
+        RemainingBalance: 35000,
+      },
+    ];
   }
 }

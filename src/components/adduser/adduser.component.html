@@ -1,14 +1,18 @@
 <div class="add-user-container">
   <div class="header">
     <div class="search-container">
-      <input type="text" placeholder="search for users..." />
+      <input
+        type="text"
+        placeholder="search for users..."
+        [(ngModel)]="searchText"
+      />
     </div>
     <button nz-button nzType="primary" (click)="showModal()">
       <i nz-icon nzType="plus"></i>Add User
     </button>
   </div>
 
-  <div *ngIf="data.length === 0" class="no-data-message">
+  <div *ngIf="(data | users : searchText).length === 0" class="no-data-message">
     <nz-empty
       nzNotFoundImage="simple"
       nzNotFoundContent="No users found"
@@ -16,9 +20,9 @@
   </div>
 
   <app-table
-    *ngIf="data.length > 0"
+    *ngIf="(data | users : searchText).length > 0"
     [columns]="columns"
-    [data]="data"
+    [data]="data | users : searchText"
     [loading]="false"
   >
   </app-table>
@@ -30,47 +34,6 @@
     (nzOnOk)="handleOk()"
   >
     <ng-container *nzModalContent>
-      <!-- <form [formGroup]="userForm">
-        <nz-form-item>
-          <nz-form-label>First Name</nz-form-label>
-          <nz-form-control [nzErrorTip]="getErrorMessage('firstName')">
-            <input nz-input formControlName="firstName" required />
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label>Last Name</nz-form-label>
-          <nz-form-control [nzErrorTip]="getErrorMessage('lastName')">
-            <input nz-input formControlName="lastName" required />
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label>Email</nz-form-label>
-          <nz-form-control [nzErrorTip]="getErrorMessage('email')">
-            <input nz-input formControlName="email" type="email" required />
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label>Phone Number</nz-form-label>
-          <nz-form-control [nzErrorTip]="getErrorMessage('phoneNumber')">
-            <input nz-input formControlName="phoneNumber" required />
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label>Password</nz-form-label>
-          <nz-form-control [nzErrorTip]="getErrorMessage('password')">
-            <input
-              nz-input
-              formControlName="password"
-              type="password"
-              required
-            />
-          </nz-form-control>
-        </nz-form-item>
-      </form> -->
       <form [formGroup]="userForm" nz-form [nzLayout]="'vertical'">
         <nz-form-item>
           <nz-form-label [nzSpan]="24" nzRequired>First Name</nz-form-label>

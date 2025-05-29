@@ -1,29 +1,82 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { RepaymentPlanDTO } from '../_models/repayment-plan.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoanService {
-  emiPlan = [
+  emiPlans = [
     {
-      title: '3 Months Plan',
-      months: 3,
-      interestRate: 12,
-      description: 'Short-term loan with competitive interest rates',
-    },
-    {
-      title: '6 Months Plan',
-      months: 6,
-      interestRate: 10.5,
-      description: 'Medium-term loan with balanced interest rates',
-    },
-    {
-      title: '12 Months Plan',
-      months: 12,
+      emiPlanId: 1,
+      loanId: 1,
+      tenureInMonths: 36,
       interestRate: 9.5,
-      description: 'Long-term loan with attractive interest rates',
+      loanAmount: 500000,
+      startDate: '2024-03-15',
+      monthlyEmi: 16000,
+      status: 'Active',
+      totalAmount: 576000,
+      remainingAmount: 576000,
+      nextPaymentDate: '2024-04-15',
+      paymentHistory: [],
+    },
+    {
+      emiPlanId: 2,
+      loanId: 2,
+      tenureInMonths: 24,
+      interestRate: 10.5,
+      loanAmount: 300000,
+      startDate: '2024-03-10',
+      monthlyEmi: 13900,
+      status: 'Active',
+      totalAmount: 333600,
+      remainingAmount: 333600,
+      nextPaymentDate: '2024-04-10',
+      paymentHistory: [],
+    },
+    {
+      emiPlanId: 3,
+      loanId: 3,
+      tenureInMonths: 48,
+      interestRate: 8.75,
+      loanAmount: 700000,
+      startDate: '2024-03-20',
+      monthlyEmi: 17300,
+      status: 'Active',
+      totalAmount: 830400,
+      remainingAmount: 830400,
+      nextPaymentDate: '2024-04-20',
+      paymentHistory: [],
+    },
+    {
+      emiPlanId: 4,
+      loanId: 4,
+      tenureInMonths: 60,
+      interestRate: 9.25,
+      loanAmount: 1000000,
+      startDate: '2024-03-25',
+      monthlyEmi: 20900,
+      status: 'Active',
+      totalAmount: 1254000,
+      remainingAmount: 1254000,
+      nextPaymentDate: '2024-04-25',
+      paymentHistory: [],
+    },
+    {
+      emiPlanId: 5,
+      loanId: 5,
+      tenureInMonths: 12,
+      interestRate: 11.25,
+      loanAmount: 200000,
+      startDate: '2024-03-05',
+      monthlyEmi: 17700,
+      status: 'Active',
+      totalAmount: 212400,
+      remainingAmount: 212400,
+      nextPaymentDate: '2024-04-05',
+      paymentHistory: [],
     },
   ];
   LoanApplication = [
@@ -186,13 +239,17 @@ export class LoanService {
 
   constructor(private http: HttpClient) {}
   getEmiPlans() {
-    return this.emiPlan;
+    return this.emiPlans;
   }
   getLoansData(): Observable<any> {
     return of(this.LoanApplication);
   }
   getAllLoans(): Observable<any> {
     return this.http.get('http://localhost:3000/LoanApplications');
+  }
+
+  getAllLoanApi(): Observable<any> {
+    return this.http.get<any>('https://localhost:7194/api/LoanApplications');
   }
 
   addLoan(loanData: any): Observable<any> {
@@ -209,5 +266,32 @@ export class LoanService {
     );
   }
 
-  
+  createEmiPlan(emiData: any): Observable<any> {
+    const newEmiPlan = {
+      emiPlanId: this.emiPlans.length + 1,
+      ...emiData,
+      status: 'Active',
+      totalAmount: emiData.monthlyEmi * emiData.tenureInMonths,
+      remainingAmount: emiData.monthlyEmi * emiData.tenureInMonths,
+      nextPaymentDate: new Date(emiData.startDate).toISOString().split('T')[0],
+      paymentHistory: [],
+    };
+
+    this.emiPlans.push(newEmiPlan);
+    return of(newEmiPlan);
+  }
+
+  addFineToEmi(emiId: number, fine: number): Observable<any> {
+    return this.http.patch(`/api/emis/${emiId}/add-fine`, { fine });
+  }
+  generateEMIPlan(loanId: number, emiData: any) {
+    return this.http.post(
+      `/api/loanApplications/${loanId}/generate-EMI-plan`,
+      emiData
+    );
+  }
+
+  getRepaymentPlan(loanId: number): Observable<any> {
+    return this.http.get<any>(`/api/loans/${loanId}/repayment-plan`);
+  }
 }

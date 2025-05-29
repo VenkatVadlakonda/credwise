@@ -1,54 +1,55 @@
-
-
-<!-- <app-button label="Add Loan" (click)="openAddLoanModal()"></app-button> -->
-
-<!-- Modal for adding loan -->
-<!-- <div class="modal" *ngIf="showModal">
-  <form [formGroup]="loanForm" (ngSubmit)="submitLoan()">
-    <input formControlName="userId" placeholder="User ID" />
-    <input formControlName="gender" placeholder="Gender" />
-    <input formControlName="dob" placeholder="DOB" type="date" />
-    <input formControlName="aadhaar" placeholder="Aadhaar" />
-    <input formControlName="address" placeholder="Address" />
-    <input formControlName="income" placeholder="Income" type="number" />
-    <input formControlName="employmentType" placeholder="Employment Type" />
-    <input formControlName="loanProductId" placeholder="Loan Product ID" />
-    <input
-      formControlName="requestedAmount"
-      placeholder="Requested Amount"
-      type="number"
-    />
-    <input
-      formControlName="requestedTenure"
-      placeholder="Requested Tenure"
-      type="number"
-    />
-    <input
-      formControlName="interestRate"
-      placeholder="Interest Rate"
-      type="number"
-    />
-    <input formControlName="purpose" placeholder="Purpose" />
-    <button type="submit">Submit</button>
-    <button type="button" (click)="closeModal()">Cancel</button>
-  </form>
-</div> -->
-
 <app-table
-  [columns]="[
-    { header: 'User ID', field: 'userId' },
-    { header: 'Gender', field: 'gender' },
-   
-  
-    
-    { header: 'Income', field: 'income' },
-    { header: 'Employment Type', field: 'employmentType' },
-    { header: 'Loan Product ID', field: 'loanProductId' },
-    { header: 'Requested Amount', field: 'requestedAmount' },
-    { header: 'Requested Tenure', field: 'requestedTenure' },
-    { header: 'Interest Rate', field: 'interestRate' },
-    
-  ]"
+  [columns]="columns"
   [data]="loans"
   [loading]="loading"
 ></app-table>
+
+<!-- EMI Plan Modal -->
+<div class="modal" *ngIf="showEMIModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Generate EMI Plan</h2>
+      <button class="close-btn" (click)="closeEMIModal()">&times;</button>
+    </div>
+    
+    <form [formGroup]="emiForm" (ngSubmit)="submitEMIPlan()">
+      <div class="form-group">
+        <label for="tenureInMonths">Tenure (Months)</label>
+        <input type="number" id="tenureInMonths" formControlName="tenureInMonths">
+        <div class="error" *ngIf="emiForm.get('tenureInMonths')?.invalid && emiForm.get('tenureInMonths')?.touched">
+          Please enter a valid tenure (minimum 1 month)
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="interestRate">Interest Rate (%)</label>
+        <input type="number" step="0.01" id="interestRate" formControlName="interestRate">
+        <div class="error" *ngIf="emiForm.get('interestRate')?.invalid && emiForm.get('interestRate')?.touched">
+          Please enter a valid interest rate
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="loanAmount">Loan Amount</label>
+        <input type="number" id="loanAmount" formControlName="loanAmount">
+        <div class="error" *ngIf="emiForm.get('loanAmount')?.invalid && emiForm.get('loanAmount')?.touched">
+          Please enter a valid loan amount
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" formControlName="startDate">
+        <div class="error" *ngIf="emiForm.get('startDate')?.invalid && emiForm.get('startDate')?.touched">
+          Please select a start date
+        </div>
+      </div>
+      
+     <div class="modal-actions">
+  <button type="button" (click)="closeEMIModal()">Cancel</button>
+  <button type="submit" [disabled]="!emiForm.valid">Save</button>
+</div>
+
+    </form>
+  </div>
+</div>

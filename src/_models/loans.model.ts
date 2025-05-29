@@ -42,3 +42,12 @@ export interface LoanType {
   loanType: string;
   loanDetail: LoanDetail;
 }
+
+export interface LoanEnquiry{
+  enquiryId:number,
+  name:string,
+  phoneNumber:string,
+  loanAmountRequired:number,
+  loanPurpose:string,
+  createdAt:string
+}

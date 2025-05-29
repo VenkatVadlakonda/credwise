@@ -16,6 +16,8 @@ import {
   TableColumn,
 } from '../../shared/components/table/table.component';
 import { UserService } from '../../_services/user.service';
+import { UsersPipe } from '../../_pipes/users.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-adduser',
@@ -23,12 +25,14 @@ import { UserService } from '../../_services/user.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     NzModalModule,
     NzButtonModule,
     NzFormModule,
     NzInputModule,
     NzEmptyModule,
     TableComponent,
+    UsersPipe,
   ],
   templateUrl: './adduser.component.html',
   styleUrl: './adduser.component.scss',
@@ -44,6 +48,7 @@ export class AdduserComponent implements OnInit {
   data: any[] = [];
   isModalVisible = false;
   userForm: FormGroup;
+  searchText: string = '';
 
   constructor(
     private userService: UserService,
@@ -87,8 +92,9 @@ export class AdduserComponent implements OnInit {
   loadUsers() {
     this.userService.getUserApi().subscribe({
       next: (users) => {
-        console.log(users);
-        this.data = users;
+        if (users && Array.isArray(users.data)) {
+          this.data = users.data;
+        }
       },
       error: (error) => {
         console.error('Error loading users:', error);
@@ -107,10 +113,10 @@ export class AdduserComponent implements OnInit {
 
   handleOk(): void {
     if (this.userForm.valid) {
-      debugger
+      debugger;
       this.userService.postUserApi(this.userForm.value).subscribe({
         next: (data) => {
-          console.log(data)
+          console.log(data);
           this.modal.success({
             nzTitle: 'Success',
             nzContent: 'User registered successfully!',
@@ -118,7 +124,7 @@ export class AdduserComponent implements OnInit {
           this.isModalVisible = false;
           this.userForm.reset();
           this.loadUsers();
-          this.userService.sendEmailPass(data)
+          this.userService.sendEmailPass(data);
         },
         error: (error) => {
           this.modal.error({
@@ -166,5 +172,10 @@ export class AdduserComponent implements OnInit {
       return 'Password must be at least 8 characters long';
     }
     return '';
+  }
+
+  onSearch(event: Event): void {
+    const searchValue = (event.target as HTMLInputElement).value;
+    this.searchText = searchValue;
   }
 }

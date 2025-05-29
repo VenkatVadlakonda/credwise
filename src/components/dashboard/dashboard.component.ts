@@ -20,6 +20,7 @@ export class DashboardComponent implements OnInit {
 
   private loanTypeService = inject(LoanProductService);
   private loanService = inject(LoanService);
+currentSlide: any;
 
   ngOnInit(): void {
     this.loanTypeService.getAllLoanType().subscribe((response) => {

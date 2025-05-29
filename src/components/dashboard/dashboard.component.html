@@ -1,39 +1,38 @@
 <div class="dashboard">
   <div class="loan-carousel-wrapper">
-  <nz-carousel nzAutoPlay>
-   
-    <div nz-carousel-content class="content" *ngFor="let loan of loanType">
-      <div class="loan-card">
-        <div>
-          <h2 class="loan-title">{{ loan.title }}</h2>
-          <p class="loan-amount">₹{{ loan.maxLoanAmount }}</p>
-          <p class="loan-description">{{ loan.description }}</p>
+    <nz-carousel nzAutoPlay [nzEffect]="'fade'" [nzDotRender]="dotTpl">
+      <div nz-carousel-content class="content" *ngFor="let loan of loanType">
+        <div class="loan-card" [ngClass]="'loan-' + loan.loanType.toLowerCase()">
+          <div class="loan-text-content">
+            <div class="loan-header">
+              <div class="loan-badge">{{loan.loanType | titlecase}} Loan</div>
+              <h2 class="loan-title">{{ loan.title }}</h2>
+            </div>
+            <p class="loan-amount">₹{{ loan.maxLoanAmount | number }}</p>
+            <p class="loan-description">{{ loan.description }}</p>
+            
+            <div class="loan-stats">
+              <div class="stat-item">
+                <span class="stat-label">Interest Rate</span>
+                <span class="stat-value">{{loan.loanDetail.interestRate}}%</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Tenure</span>
+                <span class="stat-value">{{loan.loanDetail.tenureMonths/12}} yrs</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Processing Fee</span>
+                <span class="stat-value">₹{{loan.loanDetail.processingFee}}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        
       </div>
-    </div>
+    </nz-carousel>
     
-  </nz-carousel>
-</div>
-
-<div class="emi-plans-container">
-  <h2 class="emi-plans-title">EMI Plans</h2>
-  <div class="emi-plans-grid">
-    @for (emi of emiplans; track emi) {
-    <div class="emi-plan-card">
-      <div class="emi-plan-header">
-        <h3>{{ emi.title }}</h3>
-        <span class="interest-rate">{{ emi.interestRate }}%</span>
-      </div>
-      <div class="emi-plan-details">
-        <div class="detail-item">
-          <span>{{ emi.description }}</span>
-        </div>
-      </div>
-    </div>
-    }
+    <ng-template #dotTpl let-index>
+      <div class="custom-dot" [class.active]="currentSlide === index"></div>
+    </ng-template>
   </div>
-</div>
-
-<app-chart></app-chart>
+  <app-chart></app-chart>
 </div>

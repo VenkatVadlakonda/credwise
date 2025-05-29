@@ -2,56 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { User } from '../_models/user.model';
+import { LoanEnquiry } from '../_models/loans.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   
-  LoanEnquiries=[
-  {
-    "Name": "Ravi Kumar",
-    "PhoneNumber": "9876543210",
-    "LoanAmountRequired": 500000.00,
-    "LoanPurpose": "Home Renovation",
-    "CreatedAt": "2025-05-23T10:30:00"
-  },
-  {
-    "Name": "Anjali Sharma",
-    "PhoneNumber": "9123456789",
-    "LoanAmountRequired": 250000.00,
-    "LoanPurpose": "Medical Expenses",
-    "CreatedAt": "2025-05-22T15:45:00"
-  },
-  {
-    "Name": "Suresh Mehta",
-    "PhoneNumber": "9988776655",
-    "LoanAmountRequired": 750000.00,
-    "LoanPurpose": "Business Expansion",
-    "CreatedAt": "2025-05-21T11:20:00"
-  },
-  {
-    "Name": "Priya Desai",
-    "PhoneNumber": "8899001122",
-    "LoanAmountRequired": 1200000.00,
-    "LoanPurpose": "New House Purchase",
-    "CreatedAt": "2025-05-20T09:10:00"
-  },
-  {
-    "Name": "Karan Patel",
-    "PhoneNumber": "9011223344",
-    "LoanAmountRequired": 300000.00,
-    "LoanPurpose": "Education Loan",
-    "CreatedAt": "2025-05-19T16:05:00"
-  },
-  {
-    "Name": "Venkat",
-    "PhoneNumber": "9011223344",
-    "LoanAmountRequired": 300000.00,
-    "LoanPurpose": "Education Loan",
-    "CreatedAt": "2025-05-26T16:05:00"
-  }
-]
+ 
 
 userDetails=[
    {
@@ -129,16 +87,16 @@ private url="https://localhost:7194/api/admin/users"
 
   constructor(private http:HttpClient) { }
 
-  getUserApi():Observable<User[]>{
-    return this.http.get<User[]>(this.url)
+  getUserApi():Observable<{success:string,data:User[],message:string}>{
+    return this.http.get<{success:string,data:User[],message:string}>(this.url)
   }
 
   postUserApi(user:User):Observable<User>{
     return this.http.post<User>(`${this.url}/register`,user)
   }
 
-  getLoanEnquires(){
-    return this.LoanEnquiries;
+   getLoanEnquires():Observable<{success:string,data:LoanEnquiry[],message:string}>{
+    return this.http.get<{success:string,data:LoanEnquiry[],message:string}>("https://localhost:7194/api/LoanEnquiry/getallenquiry");
   }
   getAllUsers():Observable<any>{
     return of(this.userDetails)

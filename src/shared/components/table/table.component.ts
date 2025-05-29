@@ -7,19 +7,25 @@ import {
   ContentChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from "../button/button.component";
 
 export interface TableColumn {
   header: string;
   field: string;
-  type?: 'text' | 'number' | 'date' | 'custom';
+  type?: 'text' | 'number' | 'date' | 'button' | 'custom';
   width?: string;
+  // For button type
+  buttonText?: string;
+  buttonVariant?: 'primary' | 'secondary';
+  buttonAction?: (row: any) => void;
+  // For custom type
   customTemplate?: TemplateRef<any>;
 }
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
