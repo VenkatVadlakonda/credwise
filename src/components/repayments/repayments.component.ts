@@ -74,7 +74,7 @@ export class RepaymentsComponent implements OnInit {
   }
 
   onLoanSelect(loan: any) {
-    this.router.navigate(['/repayment/loan', loan.LoanApplicationId]);
+    this.router.navigate(['/repaymentemi', loan.loanApplicationId || loan.id]);
   }
 
   fetchEmis(loanId: number) {

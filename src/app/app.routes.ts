@@ -52,6 +52,11 @@ export const routes: Routes = [
     component: ReplaymentloanComponent,
   },
   {
+    path:'repaymentemi',
+    component:ReplaymentloanComponent,
+    canActivate: [adminGuard]
+  },
+  {
     path: 'adduser',
     component: AdduserComponent,
     canActivate: [adminGuard],

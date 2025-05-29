@@ -51,3 +51,21 @@ export interface LoanEnquiry{
   loanPurpose:string,
   createdAt:string
 }
+
+
+
+export interface LoanApplication {
+  loanApplicationId: number;
+  status: string;
+  decisionDate: string | null; // ISO format or null
+  decisionReason: string | null;
+  isActive: boolean;
+  createdAt: string; // ISO format
+  loanType: string;
+  userId: number;
+  gender: string;
+  loanProductId: number;
+  requestedAmount: number;
+  requestedTenure: number; // in months
+  interestRate: number; // percentage (e.g., 7.25)
+}

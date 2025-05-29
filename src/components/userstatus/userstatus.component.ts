@@ -27,7 +27,7 @@ export class UserstatusComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.loanService.getLoansData().subscribe((loans) => {
+    this.loanService.getAllLoans().subscribe((loans) => {
       this.loans = loans;
       this.loading = false;
     });

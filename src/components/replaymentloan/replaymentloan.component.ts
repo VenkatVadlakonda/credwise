@@ -18,7 +18,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     CommonModule,
     FormsModule,
     TableComponent,
-    
+
     NzIconModule,
     RouterLink,
   ],
@@ -40,7 +40,6 @@ export class ReplaymentloanComponent implements OnInit {
     { header: 'Interest', field: 'InterestAmount', type: 'number' },
     { header: 'Total', field: 'TotalAmount', type: 'number' },
     { header: 'Remaining', field: 'RemainingBalance', type: 'number' },
-    
   ];
 
   constructor(
@@ -65,7 +64,7 @@ export class ReplaymentloanComponent implements OnInit {
   loadUserLoans() {
     if (this.userId) {
       this.loading = true;
-      this.loanService.getLoansData().subscribe({
+      this.loanService.getAllLoans().subscribe({
         next: (loans: any[]) => {
           this.loanDetails = loans.filter((l) => l.UserId === this.userId);
           this.loading = false;
@@ -86,7 +85,7 @@ export class ReplaymentloanComponent implements OnInit {
   loadLoanDetails() {
     if (this.loanId) {
       this.loading = true;
-      this.loanService.getLoansData().subscribe({
+      this.loanService.getAllLoans().subscribe({
         next: (loans: any[]) => {
           const loan = loans.find((l) => l.LoanApplicationId === this.loanId);
           if (loan) {

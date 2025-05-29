@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { RepaymentPlanDTO } from '../_models/repayment-plan.model';
+import { LoanApplication } from '../_models/loans.model';
 
 @Injectable({
   providedIn: 'root',
@@ -244,8 +245,10 @@ export class LoanService {
   getLoansData(): Observable<any> {
     return of(this.LoanApplication);
   }
-  getAllLoans(): Observable<any> {
-    return this.http.get('http://localhost:3000/LoanApplications');
+  getAllLoans(): Observable<LoanApplication[]> {
+    return this.http.get<LoanApplication[]>(
+      'http://localhost:3000/LoanApplications'
+    );
   }
 
   getAllLoanApi(): Observable<any> {
@@ -293,5 +296,8 @@ export class LoanService {
 
   getRepaymentPlan(loanId: number): Observable<any> {
     return this.http.get<any>(`/api/loans/${loanId}/repayment-plan`);
+  }
+  getStoredEMIPlans(): any[] {
+    return JSON.parse(localStorage.getItem('emiPlans') || '[]');
   }
 }
