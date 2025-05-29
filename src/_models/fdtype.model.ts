@@ -7,4 +7,8 @@ export interface FDType {
   maxAmount: number;
   duration: number;
   isActive: boolean;
+  createdBy: string;
+  modifiedBy: string;
+  createdAt: string;
+  modifiedAt: string;
 }

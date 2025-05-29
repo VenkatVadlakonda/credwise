@@ -3,6 +3,8 @@
       [class]="buttonClass"
       [disabled]="disabled || loading"
       (click)="onClick($event)"
+      [ngClass]="ngClass"
+      [ngStyle]="ngStyle"
     >
       <span *ngIf="!loading">{{ label }}</span>
       <span *ngIf="loading" class="loading-spinner"></span>

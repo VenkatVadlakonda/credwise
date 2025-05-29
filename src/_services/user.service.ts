@@ -147,7 +147,7 @@ private url="https://localhost:7194/api/admin/users"
     return this.http.post<any>(this.url,user)
   }
 
-  sendEmailPass(user:any):Observable<any>{
+  sendEmailPass(user:{email:string,password:string}):Observable<any>{
     return this.http.post<any>("https://localhost:7194/api/Emails/send-registration",user)
   }
  

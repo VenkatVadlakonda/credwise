@@ -40,8 +40,7 @@ export class LoantypesComponent {
   isEditModalVisible = false;
   currentLoanId: number | null = null;
 
-  @ViewChild('editModalTemplate', { static: true })
-  editModalTemplate!: TemplateRef<any>;
+  @ViewChild('editModalTemplate', { static: true }) editModalTemplate!: TemplateRef<any>;
 
   constructor(
     private loanProductService: LoanProductService,
@@ -67,9 +66,8 @@ export class LoantypesComponent {
 
   openEditModal(loan: LoanProduct): void {
     this.currentLoanId = loan.id;
-    this.loanProductService
-      .getPersonalLoanById(loan.id)
-      .subscribe((data: any) => {
+    this.loanProductService.getPersonalLoanById(loan.id).subscribe({
+      next: (data: any) => {
         const detail = data.loanDetail || {};
         const group: any = {
           loanProductId: [data.id],
@@ -85,31 +83,23 @@ export class LoantypesComponent {
         };
 
         if (data.loanType === 'PERSONAL') {
-          group.minSalaryRequired = [
-            detail.minSalaryRequired,
-            Validators.required,
-          ];
+          group.minSalaryRequired = [detail.minSalaryRequired, Validators.required];
+          
         }
         if (data.loanType === 'HOME') {
-          group.downPaymentPercentage = [
-            detail.downPaymentPercentage,
-            Validators.required,
-          ];
+          group.downPaymentPercentage = [detail.downPaymentPercentage, Validators.required];
+          
         }
         if (data.loanType === 'GOLD') {
-          group.goldPurityRequired = [
-            detail.goldPurityRequired || '',
-            Validators.required,
-          ];
-          group.repaymentType = [
-            detail.repaymentType || '',
-            Validators.required,
-          ];
+          group.goldPurityRequired = [detail.goldPurityRequired || '', Validators.required];
+          group.repaymentType = [detail.repaymentType || '', Validators.required];
+          
         }
 
         this.editForm = this.fb.group(group);
         this.isEditModalVisible = true;
-      });
+      }
+    });
   }
 
   handleEditOk(): void {
@@ -131,13 +121,10 @@ export class LoantypesComponent {
             interestRate: formValue.interestRate,
             tenureMonths: formValue.tenureMonths,
             processingFee: formValue.processingFee,
-            minSalaryRequired: formValue.minSalaryRequired,
-          },
+            minSalaryRequired: formValue.minSalaryRequired
+          }
         };
-        update$ = this.loanProductService.updatePersonalLoan(
-          this.currentLoanId,
-          payload
-        );
+        update$ = this.loanProductService.updatePersonalLoan(this.currentLoanId, payload);
       } else if (formValue.loanType === 'HOME') {
         payload = {
           loanProductId: formValue.loanProductId,
@@ -151,13 +138,10 @@ export class LoantypesComponent {
             interestRate: formValue.interestRate,
             tenureMonths: formValue.tenureMonths,
             processingFee: formValue.processingFee,
-            downPaymentPercentage: formValue.downPaymentPercentage,
-          },
+            downPaymentPercentage: formValue.downPaymentPercentage
+          }
         };
-        update$ = this.loanProductService.updateHomeLoan(
-          this.currentLoanId,
-          payload
-        );
+        update$ = this.loanProductService.updateHomeLoan(this.currentLoanId, payload);
       } else if (formValue.loanType === 'GOLD') {
         payload = {
           loanProductId: formValue.loanProductId,
@@ -172,13 +156,10 @@ export class LoantypesComponent {
             tenureMonths: formValue.tenureMonths,
             processingFee: formValue.processingFee,
             goldPurityRequired: formValue.goldPurityRequired,
-            repaymentType: formValue.repaymentType,
-          },
+            repaymentType: formValue.repaymentType
+          }
         };
-        update$ = this.loanProductService.updateGoldLoan(
-          this.currentLoanId,
-          payload
-        );
+        update$ = this.loanProductService.updateGoldLoan(this.currentLoanId, payload);
       }
 
       if (update$) {
@@ -190,11 +171,11 @@ export class LoantypesComponent {
           },
           error: (err) => {
             console.error('Update error:', err);
-          },
+          }
         });
       }
     } else {
-      Object.values(this.editForm.controls).forEach((control) => {
+      Object.values(this.editForm.controls).forEach(control => {
         control.markAsTouched();
       });
       console.log('Form invalid:', this.editForm.errors, this.editForm.value);
@@ -203,5 +184,27 @@ export class LoantypesComponent {
 
   handleEditCancel(): void {
     this.isEditModalVisible = false;
+  }
+
+  toggleActiveStatus(loan: any): void {
+    const action = loan.isActive ? 'deactivate' : 'activate';
+    this.modal.confirm({
+      nzTitle: `Are you sure you want to ${action} this loan type?`,
+      nzContent: `This will ${action} the loan type: <b>${loan.title}</b>.`,
+      nzOkText: 'Yes',
+      nzCancelText: 'No',
+      nzOnOk: () => {
+        this.loanProductService.toggleStatus(loan.id).subscribe({
+          next: () => this.fetchLoanTypes(),
+          error: err => {
+            this.modal.error({
+              nzTitle: 'Error',
+              nzContent: 'Failed to update loan status. Please try again.'
+            });
+            console.error('Toggle active status error:', err);
+          }
+        });
+      }
+    });
   }
 }

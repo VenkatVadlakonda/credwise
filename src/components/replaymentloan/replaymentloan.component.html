@@ -1,16 +1,17 @@
 <div class="container">
+  <a routerLink="/repayment"><i class="fa-solid fa-backward"></i> Back</a>
   <div *ngIf="loading" class="loading">Loading...</div>
 
   <div *ngIf="!loading">
     <!-- User Loans Section (when viewing by user) -->
     <div *ngIf="userId && !loanId">
       <h2>User Loans</h2>
-      <app-table 
+      <app-table
         [columns]="[
           { header: 'Loan ID', field: 'LoanApplicationId', type: 'number' },
           { header: 'Amount', field: 'RequestedAmount', type: 'number' },
           { header: 'Status', field: 'Status', type: 'text' }
-        ]" 
+        ]"
         [data]="loanDetails"
         (rowClick)="loanId = $event.LoanApplicationId; loadEmis()"
       ></app-table>
@@ -26,7 +27,9 @@
         </div>
         <div class="detail-item">
           <span class="label">Amount:</span>
-          <span class="value">{{ loanDetails[0].RequestedAmount | currency }}</span>
+          <span class="value">{{
+            loanDetails[0].RequestedAmount | currency
+          }}</span>
         </div>
         <div class="detail-item">
           <span class="label">Interest Rate:</span>

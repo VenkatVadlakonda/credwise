@@ -23,5 +23,5 @@ export class FDTypeService {
     return this.http.put<FDType>(`${this.apiUrl}/${id}`, data);
   }
 
-  // Add create and delete if needed
+ 
 }

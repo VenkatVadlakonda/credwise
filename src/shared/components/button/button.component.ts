@@ -14,6 +14,9 @@ export class ButtonComponent {
   @Input() disabled: boolean = false;
   @Input() loading: boolean = false;
   @Input() onClick: (event: MouseEvent) => void = () => {};
+  @Input() ngStyle: { [key: string]: any } = {};
+  @Input() ngClass!: string | string[] | Set<string> | { [klass: string]: any; };
+
 
   get buttonClass(): string {
     return this.variant;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LoanService } from '../../_services/loan.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -7,16 +7,17 @@ import {
   TableColumn,
 } from '../../shared/components/table/table.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-replaymentloan',
   standalone: true,
-  imports: [CommonModule, TableComponent, ButtonComponent],
+  imports: [CommonModule, TableComponent, ButtonComponent,NzIconModule,RouterLink],
   templateUrl: './replaymentloan.component.html',
   styleUrl: './replaymentloan.component.scss',
 })
 export class ReplaymentloanComponent implements OnInit {
-   userId: number | null = null;
+  userId: number | null = null;
   loanId: number | null = null;
   loanDetails: any[] = []; // Changed to array to store multiple loans
   emis: any[] = [];
@@ -39,10 +40,10 @@ export class ReplaymentloanComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.userId = params['userId'] ? +params['userId'] : null;
       this.loanId = params['loanId'] ? +params['loanId'] : null;
-      
+
       if (this.userId) {
         this.loadUserLoans();
       } else if (this.loanId) {
@@ -56,9 +57,9 @@ export class ReplaymentloanComponent implements OnInit {
       this.loading = true;
       this.loanService.getLoansData().subscribe({
         next: (loans: any[]) => {
-          this.loanDetails = loans.filter(l => l.UserId === this.userId);
+          this.loanDetails = loans.filter((l) => l.UserId === this.userId);
           this.loading = false;
-          
+
           // If there's only one loan, load its EMIs automatically
           if (this.loanDetails.length === 1) {
             this.loanId = this.loanDetails[0].LoanApplicationId;
@@ -78,7 +79,7 @@ export class ReplaymentloanComponent implements OnInit {
       this.loading = true;
       this.loanService.getLoansData().subscribe({
         next: (loans: any[]) => {
-          const loan = loans.find(l => l.LoanApplicationId === this.loanId);
+          const loan = loans.find((l) => l.LoanApplicationId === this.loanId);
           if (loan) {
             this.loanDetails = [loan]; // Store as array for consistent template rendering
             this.userId = loan.UserId;
@@ -107,6 +108,8 @@ export class ReplaymentloanComponent implements OnInit {
       (principal * rate * Math.pow(1 + rate, tenure)) /
       (Math.pow(1 + rate, tenure) - 1);
 
+    const now = new Date();
+
     this.emis = Array.from({ length: tenure }, (_, i) => {
       const installmentNumber = i + 1;
       const dueDate = new Date();
@@ -115,14 +118,26 @@ export class ReplaymentloanComponent implements OnInit {
       const interestAmount = principal * rate;
       const principalAmount = emi - interestAmount;
 
+      // Default status and fine
+      let status = 'Pending';
+      let fine = 0;
+      let totalAmount = emi;
+
+      // If due date is in the past and not paid, add fine
+      if (dueDate < now) {
+        fine = 300;
+        status = 'Overdue';
+        totalAmount = emi + fine;
+      }
+
       return {
         InstallmentNumber: installmentNumber,
         DueDate: dueDate.toISOString(),
         PrincipalAmount: principalAmount.toFixed(2),
         InterestAmount: interestAmount.toFixed(2),
-        TotalAmount: emi.toFixed(2),
-        Status: 'Pending',
-        Fine: 0,
+        TotalAmount: totalAmount.toFixed(2),
+        Status: status,
+        Fine: fine,
       };
     });
   }

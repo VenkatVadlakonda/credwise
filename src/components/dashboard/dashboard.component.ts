@@ -4,9 +4,9 @@ import { AdminService } from '../../_services/admin.service';
 import { LoanService } from '../../_services/loan.service';
 import { CommonModule } from '@angular/common';
 import { ChartComponent } from '../../shared/components/chart/chart.component';
-import { TableComponent } from "../../shared/components/table/table.component";
+import { TableComponent } from '../../shared/components/table/table.component';
 import { LoanProductService } from '../../_services/loan-product.service';
-import {  LoanType } from '../../_models/loans.model';
+import { LoanType } from '../../_models/loans.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,22 +15,20 @@ import {  LoanType } from '../../_models/loans.model';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
-  loanType: LoanType[]=[];
+  loanType: LoanType[] = [];
   emiplans: any;
-  
-  private loanTypeService=inject(LoanProductService)
+
+  private loanTypeService = inject(LoanProductService);
   private loanService = inject(LoanService);
 
- ngOnInit(): void {
-  this.loanTypeService.getLoansTypes().subscribe(response => {
-    console.log(response);
-    if (response && Array.isArray(response.data)) {
-      this.loanType = response.data;
-    }
-  });
+  ngOnInit(): void {
+    this.loanTypeService.getAllLoanType().subscribe((response) => {
+      console.log(response);
+      if (response && Array.isArray(response.data)) {
+        this.loanType = response.data;
+      }
+    });
 
-  this.emiplans = this.loanService.getEmiPlans();
-}
-
-
+    this.emiplans = this.loanService.getEmiPlans();
+  }
 }

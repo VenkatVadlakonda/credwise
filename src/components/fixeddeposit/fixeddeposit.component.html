@@ -15,51 +15,100 @@
       <td>{{ fd.interestRate }}%</td>
       <td>{{ fd.duration }}</td>
       <td>
-        <button nz-button nzType="primary" class="modify-btn" (click)="openEditModal(fd)">Modify</button>
+        <button nz-button nzType="default" (click)="showEditModal(fd)">
+          Modify
+        </button>
       </td>
     </tr>
   </tbody>
 </nz-table>
 
-<!-- Modal (use your modal library or Angular Material Dialog) -->
 <nz-modal
-
   [(nzVisible)]="isEditModalVisible"
-  nzTitle="Edit FD Type"
+  nzTitle="Edit Fixed Deposit Type"
   (nzOnCancel)="handleEditCancel()"
   (nzOnOk)="handleEditOk()"
-  [nzOkDisabled]="!editForm?.valid"
-  [nzOkLoading]="false"
+  [nzOkLoading]="isEditLoading"
 >
-  <form [formGroup]="editForm" *ngIf="editForm">
-    <div class="form-group">
-      <label>Name</label>
-      <input nz-input formControlName="name" />
-    </div>
-    <div class="form-group">
-      <label>Description</label>
-      <input nz-input formControlName="description" />
-    </div>
-    <div class="form-group">
-      <label>Interest Rate (%)</label>
-      <input nz-input type="number" formControlName="interestRate" />
-    </div>
-    <div class="form-group">
-      <label>Min Amount</label>
-      <input nz-input type="number" formControlName="minAmount" />
-    </div>
-    <div class="form-group">
-      <label>Max Amount</label>
-      <input nz-input type="number" formControlName="maxAmount" />
-    </div>
-    <div class="form-group">
-      <label>Duration (months)</label>
-      <input nz-input type="number" formControlName="duration" />
-    </div>
-    <div class="form-group">
-      <label>Status</label>
-      <nz-switch formControlName="isActive"></nz-switch>
-    </div>
+  <form *ngIf="editForm" [formGroup]="editForm" nz-form>
+    <nz-form-item>
+      <nz-form-label>Name:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="name" />
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label>Description:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="description" />
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label>Interest Rate:</nz-form-label>
+      <nz-form-control>
+        <input nz-input type="number" formControlName="interestRate" />
+      </nz-form-control>
+    </nz-form-item>
+    
+    <!-- Add similar nz-form-item wrappers for all other fields -->
+    <nz-form-item>
+      <nz-form-label>Min Amount:</nz-form-label>
+      <nz-form-control>
+        <input nz-input type="number" formControlName="minAmount" />
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label>Max Amount:</nz-form-label>
+      <nz-form-control>
+        <input nz-input type="number" formControlName="maxAmount" />
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label>Duration (months):</nz-form-label>
+      <nz-form-control>
+        <input nz-input type="number" formControlName="duration" />
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label>Active:</nz-form-label>
+      <nz-form-control>
+        <nz-switch formControlName="isActive"></nz-switch>
+      </nz-form-control>
+    </nz-form-item>
+    
+    <!-- Readonly fields -->
+    <nz-form-item>
+      <nz-form-label>Created By:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="createdBy" readonly />
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label>Modified By:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="modifiedBy" readonly />
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label>Created At:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="createdAt" readonly />
+      </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item>
+      <nz-form-label>Modified At:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="modifiedAt" readonly />
+      </nz-form-control>
+    </nz-form-item>
   </form>
-  
 </nz-modal>
+
