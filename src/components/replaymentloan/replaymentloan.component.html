@@ -1,72 +1,18 @@
 <div class="container">
   <a routerLink="/repayment"><i class="fa-solid fa-backward"></i> Back</a>
-  <div *ngIf="loading" class="loading">Loading...</div>
+  <h2>Repayments for Loan #{{ loanApplicationId }}</h2>
 
-  <div *ngIf="!loading">
-    <!-- User Loans Section (when viewing by user) -->
-    <div *ngIf="userId && !loanId">
-      <h2>User Loans</h2>
-      <app-table
-        [columns]="[
-          { header: 'Loan ID', field: 'LoanApplicationId', type: 'number' },
-          { header: 'Amount', field: 'RequestedAmount', type: 'number' },
-          { header: 'Status', field: 'Status', type: 'text' }
-        ]"
-        [data]="loanDetails"
-        (rowClick)="loanId = $event.LoanApplicationId; loadEmis()"
-      ></app-table>
-    </div>
-
-    <!-- Loan Details Section -->
-    <div *ngIf="loanId && loanDetails.length > 0">
-      <h2>Loan Details</h2>
-      <div class="details-grid">
-        <div class="detail-item">
-          <span class="label">Loan ID:</span>
-          <span class="value">{{ loanDetails[0].LoanApplicationId }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Amount:</span>
-          <span class="value">{{
-            loanDetails[0].RequestedAmount | currency
-          }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Interest Rate:</span>
-          <span class="value">{{ loanDetails[0].InterestRate }}%</span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Status:</span>
-          <span class="value">{{ loanDetails[0].Status }}</span>
-        </div>
-      </div>
-
-      <!-- EMI Table Section -->
-      <div *ngIf="emis.length > 0" class="emi-section">
-        <h2>EMI Schedule</h2>
-        <app-table [columns]="emiColumns" [data]="emis" [actions]="true">
-          <ng-template #actionTemplate let-item>
-            <button
-              *ngIf="
-                item.Status === 'Overdue' && (!item.Fine || item.Fine === 0)
-              "
-              (click)="addFine(item, 300)"
-              class="btn btn-warning"
-            >
-              Add Fine
-            </button>
-            <span *ngIf="item.Status === 'Paid'">Paid</span>
-            <span *ngIf="item.Status === 'Pending'">Pending</span>
-            <span *ngIf="item.Status === 'Overdue' && item.Fine"
-              >Fine Added: {{ item.Fine }}</span
-            >
-          </ng-template>
-        </app-table>
-      </div>
-    </div>
-
-    <div *ngIf="!loading && loanDetails.length === 0">
-      <p>No loans found</p>
-    </div>
-  </div>
+  <app-table
+    [columns]="columns"
+    [data]="repayments"
+    [loading]="loading"
+    
+  >
+    <ng-template #actionTemplate let-item>
+      <button class="btn btn-primary" (click)="addPenalty(item)">
+        Add Fine
+      </button>
+      <!-- <span *ngIf="item.status !== 'Overdue'">{{ item.status }}</span> -->
+    </ng-template>
+  </app-table>
 </div>

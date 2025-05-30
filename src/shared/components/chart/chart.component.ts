@@ -1,157 +1,157 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { LoanService } from '../../../_services/loan.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chart',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
 })
-export class ChartComponent {
-  // @ViewChild('statusChart', { static: true })
-  // statusChart!: ElementRef<HTMLDivElement>;
-  // @ViewChild('employmentChart', { static: true })
-  // employmentChart!: ElementRef<HTMLDivElement>;
+export class ChartComponent implements OnDestroy {
+  @ViewChild('statusChart') statusChart!: ElementRef<HTMLDivElement>;
+  @ViewChild('loanTypeChart') loanTypeChart!: ElementRef<HTMLDivElement>;
+  @ViewChild('genderChart') genderChart!: ElementRef<HTMLDivElement>;
+  @ViewChild('employmentChart') employmentChart!: ElementRef<HTMLDivElement>;
 
-  // constructor(private loanService: LoanService) {}
-
-  // ngOnInit() {
-  //   this.loadGoogleChartsScript().then(() => {
-  //     this.fetchDataAndDrawCharts();
-  //   });
-  // }
-
-  // loadGoogleChartsScript(): Promise<void> {
-  //   return new Promise((resolve) => {
-  //     if ((window as any).google && (window as any).google.charts) {
-  //       resolve();
-  //       return;
-  //     }
-  //     const script = document.createElement('script');
-  //     script.src = 'https://www.gstatic.com/charts/loader.js';
-  //     script.onload = () => resolve();
-  //     document.head.appendChild(script);
-  //   });
-  // }
-
-  // fetchDataAndDrawCharts() {
-  //   this.loanService.getAllLoans().subscribe((res) => {
-      
-  //     const data = res;
-
-  //     const statusCounts = data.reduce(
-  //       (acc: Record<string, number>, loan: any) => {
-  //         acc[loan.status] = (acc[loan.status] || 0) + 1;
-  //         return acc;
-  //       },
-  //       {}
-  //     );
-      
-  //     const employmentCounts = data.reduce(
-  //       (acc: Record<string, number>, loan: any) => {
-  //         acc[loan.employmentType] = (acc[loan.employmentType] || 0) + 1;
-  //         return acc;
-  //       },
-  //       {}
-  //     );
-
-  //     this.drawPieChart(
-  //       this.statusChart.nativeElement,
-  //       statusCounts,
-  //       'Loan Status'
-  //     );
-  //     this.drawPieChart(
-  //       this.employmentChart.nativeElement,
-  //       employmentCounts,
-  //       'Employment'
-  //     );
-  //   });
-  // }
-
-  // drawPieChart(
-  //   element: HTMLElement,
-  //   counts: Record<string, number>,
-  //   title: string
-  // ) {
-  //   const google = (window as any).google;
-  //   google.charts.load('current', { packages: ['corechart'] });
-  //   google.charts.setOnLoadCallback(() => {
-  //     const dataArray: (string | number)[][] = [['Category', 'Count']];
-  //     for (const key in counts) {
-  //       dataArray.push([key, counts[key]]);
-  //     }
-
-  //     const data = google.visualization.arrayToDataTable(dataArray);
-
-  //     const options = {
-  //       title,
-  //       pieHole: 0.4, // donut style, remove if you want classic pie
-  //       legend: { position: 'right' },
-  //     };
-
-  //     const chart = new google.visualization.PieChart(element);
-  //     chart.draw(data, options);
-  //   });
-  // }
-  @ViewChild('statusChart', { static: true }) statusChart!: ElementRef<HTMLDivElement>;
-  @ViewChild('loanTypeChart', { static: true }) loanTypeChart!: ElementRef<HTMLDivElement>;
+  loading = true;
+  error: string | null = null;
+  private refreshInterval: any;
 
   constructor(private loanService: LoanService) {}
 
   ngOnInit() {
-    this.loadGoogleChartsScript().then(() => {
+    this.loadCharts();
+    // Auto-refresh every 10 seconds
+    this.refreshInterval = setInterval(() => {
       this.fetchDataAndDrawCharts();
-    });
+    }, 10000);
+  }
+
+  ngOnDestroy() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+  }
+
+  async loadCharts() {
+    try {
+      await this.loadGoogleChartsScript();
+      this.fetchDataAndDrawCharts();
+    } catch (err) {
+      console.error('Failed to load charts:', err);
+      this.error = 'Failed to load charts. Please try again later.';
+      this.loading = false;
+    }
   }
 
   loadGoogleChartsScript(): Promise<void> {
-    return new Promise((resolve) => {
-      if ((window as any).google && (window as any).google.charts) {
+    return new Promise((resolve, reject) => {
+      if ((window as any).google?.charts) {
         resolve();
         return;
       }
+
       const script = document.createElement('script');
       script.src = 'https://www.gstatic.com/charts/loader.js';
       script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Failed to load Google Charts'));
       document.head.appendChild(script);
     });
   }
 
   fetchDataAndDrawCharts() {
-    this.loanService.getAllLoans().subscribe((data) => {
-      const statusCounts = data.reduce((acc: Record<string, number>, loan: any) => {
-        acc[loan.status] = (acc[loan.status] || 0) + 1;
-        return acc;
-      }, {});
+    this.loanService.getAllLoans().subscribe({
+      next: (data) => {
+        if (!data || data.length === 0) {
+          this.error = 'No data available for charts';
+          return;
+        }
 
-      const loanTypeCounts = data.reduce((acc: Record<string, number>, loan: any) => {
-        acc[loan.loanType] = (acc[loan.loanType] || 0) + 1;
-        return acc;
-      }, {});
-
-      this.drawPieChart(this.statusChart.nativeElement, statusCounts, 'Loan Status');
-      this.drawPieChart(this.loanTypeChart.nativeElement, loanTypeCounts, 'Loan Types');
+        this.drawAllCharts(data);
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching loan data:', err);
+        this.error = 'Failed to load loan data';
+        this.loading = false;
+      },
     });
   }
 
-  drawPieChart(element: HTMLElement, counts: Record<string, number>, title: string) {
+  drawAllCharts(data: any[]) {
+    try {
+      const statusCounts = this.countByKey(data, 'status');
+      const loanTypeCounts = this.countByKey(data, 'loanType');
+      const genderCounts = this.countByKey(data, 'gender');
+      const employmentCounts = this.countByKey(data, 'employmentType');
+
+      this.drawPieChart(
+        this.statusChart.nativeElement,
+        statusCounts,
+        'Loan Status'
+      );
+      this.drawPieChart(
+        this.loanTypeChart.nativeElement,
+        loanTypeCounts,
+        'Loan Types'
+      );
+      this.drawPieChart(
+        this.genderChart.nativeElement,
+        genderCounts,
+        'Gender Distribution'
+      );
+      this.drawPieChart(
+        this.employmentChart.nativeElement,
+        employmentCounts,
+        'Employment Type'
+      );
+    } catch (err) {
+      console.error('Error drawing charts:', err);
+      this.error = 'Error rendering charts';
+    }
+  }
+
+  countByKey(data: any[], key: string): Record<string, number> {
+    return data.reduce((acc: Record<string, number>, item: any) => {
+      const value = item[key] || 'Unknown';
+      acc[value] = (acc[value] || 0) + 1;
+      return acc;
+    }, {});
+  }
+
+  drawPieChart(
+    element: HTMLElement,
+    counts: Record<string, number>,
+    title: string
+  ) {
+    if (!element) {
+      console.error('Chart element not found for:', title);
+      return;
+    }
+
     const google = (window as any).google;
     google.charts.load('current', { packages: ['corechart'] });
     google.charts.setOnLoadCallback(() => {
-      const dataArray: (string | number)[][] = [['Category', 'Count']];
-      for (const key in counts) {
-        dataArray.push([key, counts[key]]);
+      try {
+        const dataArray: (string | number)[][] = [['Category', 'Count']];
+        Object.entries(counts).forEach(([key, value]) => {
+          dataArray.push([key, value]);
+        });
+
+        const data = google.visualization.arrayToDataTable(dataArray);
+        const options = {
+          title,
+          pieHole: 0.4,
+          legend: { position: 'right' },
+          chartArea: { width: '80%', height: '80%' },
+        };
+
+        const chart = new google.visualization.PieChart(element);
+        chart.draw(data, options);
+      } catch (err) {
+        console.error('Error drawing chart:', title, err);
       }
-
-      const data = google.visualization.arrayToDataTable(dataArray);
-      const options = {
-        title,
-        pieHole: 0.4,
-        legend: { position: 'right' },
-      };
-
-      const chart = new google.visualization.PieChart(element);
-      chart.draw(data, options);
     });
   }
 }

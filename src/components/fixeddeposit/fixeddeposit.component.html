@@ -15,100 +15,191 @@
       <td>{{ fd.interestRate }}%</td>
       <td>{{ fd.duration }}</td>
       <td>
-        <button nz-button nzType="default" (click)="showEditModal(fd)">
-          Modify
-        </button>
+        <div style="display: flex; gap: 8px;">
+          <button nz-button nzType="primary" class="modify-btn" (click)="openEditModal(fd)">Modify</button>
+          <button
+            nz-button
+            [nzType]="fd.isActive ? 'default' : 'primary'"
+            [nzDanger]="fd.isActive"
+            (click)="toggleActiveStatus(fd)"
+          >
+            {{ fd.isActive ? 'Deactivate' : 'Activate' }}
+          </button>
+        </div>
       </td>
     </tr>
   </tbody>
 </nz-table>
 
-<nz-modal
+<!-- Modal (use your modal library or Angular Material Dialog) -->
+<!-- <nz-modal
+
+  [(nzVisible)]="isEditModalVisible"
+  nzTitle="Edit FD Type"
+  (nzOnCancel)="handleEditCancel()"
+  (nzOnOk)="handleEditOk()"
+  [nzOkDisabled]="!editForm"
+  [nzOkLoading]="false"
+>
+  <form [formGroup]="editForm" *ngIf="editForm">
+    <div class="form-group">
+      <label>Name</label>
+      <input nz-input formControlName="name" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input nz-input formControlName="description" />
+    </div>
+    <div class="form-group">
+      <label>Interest Rate (%)</label>
+      <input nz-input type="number" formControlName="interestRate" />
+    </div>
+    <div class="form-group">
+      <label>Min Amount</label>
+      <input nz-input type="number" formControlName="minAmount" />
+    </div>
+    <div class="form-group">
+      <label>Max Amount</label>
+      <input nz-input type="number" formControlName="maxAmount" />
+    </div>
+    <div class="form-group">
+      <label>Duration (months)</label>
+      <input nz-input type="number" formControlName="duration" />
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <nz-switch formControlName="isActive"></nz-switch>
+    </div>
+  </form>
+  
+</nz-modal> -->
+<!-- <nz-modal
+
   [(nzVisible)]="isEditModalVisible"
   nzTitle="Edit Fixed Deposit Type"
   (nzOnCancel)="handleEditCancel()"
   (nzOnOk)="handleEditOk()"
-  [nzOkLoading]="isEditLoading"
+  [nzOkLoading]="editForm?."
 >
-  <form *ngIf="editForm" [formGroup]="editForm" nz-form>
-    <nz-form-item>
-      <nz-form-label>Name:</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="name" />
-      </nz-form-control>
-    </nz-form-item>
-    
-    <nz-form-item>
-      <nz-form-label>Description:</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="description" />
-      </nz-form-control>
-    </nz-form-item>
-    
-    <nz-form-item>
-      <nz-form-label>Interest Rate:</nz-form-label>
-      <nz-form-control>
-        <input nz-input type="number" formControlName="interestRate" />
-      </nz-form-control>
-    </nz-form-item>
-    
-    <!-- Add similar nz-form-item wrappers for all other fields -->
-    <nz-form-item>
-      <nz-form-label>Min Amount:</nz-form-label>
-      <nz-form-control>
-        <input nz-input type="number" formControlName="minAmount" />
-      </nz-form-control>
-    </nz-form-item>
-    
-    <nz-form-item>
-      <nz-form-label>Max Amount:</nz-form-label>
-      <nz-form-control>
-        <input nz-input type="number" formControlName="maxAmount" />
-      </nz-form-control>
-    </nz-form-item>
-    
-    <nz-form-item>
-      <nz-form-label>Duration (months):</nz-form-label>
-      <nz-form-control>
-        <input nz-input type="number" formControlName="duration" />
-      </nz-form-control>
-    </nz-form-item>
-    
-    <nz-form-item>
-      <nz-form-label>Active:</nz-form-label>
-      <nz-form-control>
-        <nz-switch formControlName="isActive"></nz-switch>
-      </nz-form-control>
-    </nz-form-item>
-    
-    <!-- Readonly fields -->
-    <nz-form-item>
-      <nz-form-label>Created By:</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="createdBy" readonly />
-      </nz-form-control>
-    </nz-form-item>
-    
-    <nz-form-item>
-      <nz-form-label>Modified By:</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="modifiedBy" readonly />
-      </nz-form-control>
-    </nz-form-item>
-    
-    <nz-form-item>
-      <nz-form-label>Created At:</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="createdAt" readonly />
-      </nz-form-control>
-    </nz-form-item>
-    
-    <nz-form-item>
-      <nz-form-label>Modified At:</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="modifiedAt" readonly />
-      </nz-form-control>
-    </nz-form-item>
+  <form *ngIf="editForm" [formGroup]="editForm" (ngSubmit)="handleEditOk()">
+    <div class="form-group">
+      <label>Name</label>
+      <input nz-input formControlName="name" placeholder="Enter FD Name" />
+      <div *ngIf="editForm.get('name')?.invalid && editForm.get('name')?.touched" class="error">
+        Name is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input nz-input formControlName="description" placeholder="Enter Description" />
+      <div *ngIf="editForm.get('description')?.invalid && editForm.get('description')?.touched" class="error">
+        Description is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Interest Rate (%)</label>
+      <input nz-input type="number" formControlName="interestRate" placeholder="Enter Interest Rate" />
+      <div *ngIf="editForm.get('interestRate')?.invalid && editForm.get('interestRate')?.touched" class="error">
+        Interest Rate is required and must be >= 0.
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Min Amount</label>
+      <input nz-input type="number" formControlName="minAmount" placeholder="Enter Min Amount" />
+      <div *ngIf="editForm.get('minAmount')?.invalid && editForm.get('minAmount')?.touched" class="error">
+        Min Amount is required and must be >= 1.
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Max Amount</label>
+      <input nz-input type="number" formControlName="maxAmount" placeholder="Enter Max Amount" />
+      <div *ngIf="editForm.get('maxAmount')?.invalid && editForm.get('maxAmount')?.touched" class="error">
+        Max Amount is required and must be >= 1.
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Duration (months)</label>
+      <input nz-input type="number" formControlName="duration" placeholder="Enter Duration" />
+      <div *ngIf="editForm.get('duration')?.invalid && editForm.get('duration')?.touched" class="error">
+        Duration is required and must be >= 1.
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Active</label>
+      <nz-switch formControlName="isActive"></nz-switch>
+    </div>
   </form>
-</nz-modal>
+</nz-modal> -->
 
+<!-- Table code remains unchanged -->
+
+<!-- Custom Modal -->
+<div class="custom-modal-backdrop" *ngIf="isEditModalVisible">
+  <div class="custom-modal">
+    <h2>Edit Fixed Deposit Type</h2>
+    <form [formGroup]="editForm" (ngSubmit)="handleEditOk()">
+      <div class="form-group">
+        <label>Name</label>
+        <input formControlName="name" placeholder="Enter FD Name" />
+        <div *ngIf="editForm.get('name')?.invalid && editForm.get('name')?.touched" class="error">
+          <span *ngIf="editForm.get('name')?.errors?.['required']">Name is required.</span>
+          <span *ngIf="editForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters.</span>
+          <span *ngIf="editForm.get('name')?.errors?.['maxlength']">Name must be at most 100 characters.</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input formControlName="description" placeholder="Enter Description" />
+        <div *ngIf="editForm.get('description')?.invalid && editForm.get('description')?.touched" class="error">
+          <span *ngIf="editForm.get('description')?.errors?.['required']">Description is required.</span>
+          <span *ngIf="editForm.get('description')?.errors?.['minlength']">Description must be at least 5 characters.</span>
+          <span *ngIf="editForm.get('description')?.errors?.['maxlength']">Description must be at most 300 characters.</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Interest Rate (%)</label>
+        <input type="number" formControlName="interestRate" placeholder="Enter Interest Rate" />
+        <div *ngIf="editForm.get('interestRate')?.invalid && editForm.get('interestRate')?.touched" class="error">
+          <span *ngIf="editForm.get('interestRate')?.errors?.['required']">Interest Rate is required.</span>
+          <span *ngIf="editForm.get('interestRate')?.errors?.['min']">Interest Rate must be at least 0.</span>
+          <span *ngIf="editForm.get('interestRate')?.errors?.['max']">Interest Rate must be at most 100.</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Min Amount</label>
+        <input type="number" formControlName="minAmount" placeholder="Enter Min Amount" />
+        <div *ngIf="editForm.get('minAmount')?.invalid && editForm.get('minAmount')?.touched" class="error">
+          <span *ngIf="editForm.get('minAmount')?.errors?.['required']">Min Amount is required.</span>
+          <span *ngIf="editForm.get('minAmount')?.errors?.['min']">Min Amount must be at least 1.</span>
+          <span *ngIf="editForm.get('minAmount')?.errors?.['max']">Min Amount must be at most 100,000,000.</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Max Amount</label>
+        <input type="number" formControlName="maxAmount" placeholder="Enter Max Amount" />
+        <div *ngIf="editForm.get('maxAmount')?.invalid && editForm.get('maxAmount')?.touched" class="error">
+          <span *ngIf="editForm.get('maxAmount')?.errors?.['required']">Max Amount is required.</span>
+          <span *ngIf="editForm.get('maxAmount')?.errors?.['min']">Max Amount must be at least 1.</span>
+          <span *ngIf="editForm.get('maxAmount')?.errors?.['max']">Max Amount must be at most 100,000,000.</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Duration (months)</label>
+        <input type="number" formControlName="duration" placeholder="Enter Duration" />
+        <div *ngIf="editForm.get('duration')?.invalid && editForm.get('duration')?.touched" class="error">
+          <span *ngIf="editForm.get('duration')?.errors?.['required']">Duration is required.</span>
+          <span *ngIf="editForm.get('duration')?.errors?.['min']">Duration must be at least 1 month.</span>
+          <span *ngIf="editForm.get('duration')?.errors?.['max']">Duration must be at most 1200 months.</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Active</label>
+        <input type="checkbox" formControlName="isActive" />
+      </div>
+      <div class="modal-actions">
+        <button type="submit" [disabled]="editForm.invalid">Save</button>
+        <button type="button" (click)="handleEditCancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

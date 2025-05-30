@@ -13,14 +13,10 @@ import { CreateloanComponent } from '../components/createloan/createloan.compone
 
 import { ReplaymentloanComponent } from '../components/replaymentloan/replaymentloan.component';
 
-
-
-
 import { adminGuard } from '../_auth/admin.guard';
 import { LoantypesComponent } from '../components/loantypes/loantypes.component';
 import { FixeddepositComponent } from '../components/fixeddeposit/fixeddeposit.component';
 import { EmiplansComponent } from '../components/emiplans/emiplans.component';
-
 
 export const routes: Routes = [
   {
@@ -36,25 +32,24 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    
   },
   {
     path: 'repayment',
     component: RepaymentsComponent,
     canActivate: [adminGuard],
   },
+  // {
+  //   path: 'repayment/user/:userId',
+  //   component: ReplaymentloanComponent,
+  // },
+  // {
+  //   path: 'repayment/loan/:loanId',
+  //   component: ReplaymentloanComponent,
+  // },
   {
-    path: 'repayment/user/:userId',
+    path: 'repaymentemi/:id',
     component: ReplaymentloanComponent,
-  },
-  {
-    path: 'repayment/loan/:loanId',
-    component: ReplaymentloanComponent,
-  },
-  {
-    path:'repaymentemi',
-    component:ReplaymentloanComponent,
-    canActivate: [adminGuard]
+    canActivate: [adminGuard],
   },
   {
     path: 'adduser',
@@ -82,23 +77,21 @@ export const routes: Routes = [
     canActivate: [adminGuard],
   },
   {
-    path:'loantype',
-    component:LoantypesComponent,
-    canActivate: [adminGuard]
-
+    path: 'loantype',
+    component: LoantypesComponent,
+    canActivate: [adminGuard],
   },
   {
-    path:'fd',
-    component:FixeddepositComponent,
-    canActivate: [adminGuard]
-
+    path: 'fd',
+    component: FixeddepositComponent,
+    canActivate: [adminGuard],
   },
   {
-    path:'emiplan',
-    component:EmiplansComponent,
-    canActivate: [adminGuard]
+    path: 'emiplan',
+    component: EmiplansComponent,
+    canActivate: [adminGuard],
   },
- 
+
   {
     path: '**',
     component: PagenotfoundComponent,

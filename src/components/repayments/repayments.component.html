@@ -1,43 +1,18 @@
 <div class="container">
-  <h2>Customers</h2>
-  <app-table
-    [columns]="userColumns"
-    [data]="users"
-    (rowClick)="onUserSelect($event)"
-    [loading]="loading"
-  ></app-table>
-</div>
-
-<!-- <div *ngIf="selectedUser">
-  <h3>
-    Applied Loans for {{ selectedUser.firstName + " " + selectedUser.lastName }}
-  </h3>
+  <h2>Loans</h2>
+  <div class="search-container">
+    <input
+      type="text"
+      id="loanId"
+      [(ngModel)]="loanId"
+      (ngModelChange)="onLoanIdChange($event)"
+      placeholder="Enter Loan ID or User ID"
+    />
+  </div>
   <app-table
     [columns]="loanColumns"
-    [data]="loans"
+    [data]="loans | repayment : loanId"
     (rowClick)="onLoanSelect($event)"
     [loading]="loading"
   ></app-table>
-</div> -->
-
-<!-- <div *ngIf="selectedLoan">
-  <h4>EMI Schedule for Loan #{{ selectedLoan.LoanApplicationId }}</h4>
-  <app-table
-    [columns]="emiColumns"
-    [data]="emis"
-    [loading]="loading"
-  ></app-table>
-  <div *ngFor="let emi of emis">
-    <span>EMI #{{ emi.InstallmentNumber }} - Status: {{ emi.Status }}</span>
-    <app-button
-      *ngIf="emi.Status === 'Overdue'"
-      [label]="'Add Fine'"
-      (click)="addFine(emi)"
-    ></app-button>
-    <app-button
-      *ngIf="emi.Status === 'Pending' || emi.Status === 'Overdue'"
-      [label]="'Pay EMI'"
-      (click)="payEmi(emi)"
-    ></app-button>
-  </div>
-</div> -->
+</div>

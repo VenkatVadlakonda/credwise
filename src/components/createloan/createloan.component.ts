@@ -14,6 +14,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { RepaymentService } from '../../_services/repayment.service';
 
 @Component({
   selector: 'app-createloan',
@@ -26,44 +27,37 @@ export class CreateloanComponent implements OnInit {
   showEMIModal: boolean = false;
   loading = false;
   selectedLoanId: number | null = null;
-  // In your component class
+
   columns: TableColumn[] = [
+    { header: 'Loan ID', field: 'loanApplicationId', type: 'text' },
+    { header: 'User ID', field: 'userId', type: 'text' },
     { header: 'User ID', field: 'userId', type: 'text' },
     { header: 'Gender', field: 'gender', type: 'text' },
-
+    { header: 'EmploymentType', field: 'employmentType', type: 'text' },
     { header: 'Loan Product ID', field: 'loanProductId', type: 'text' },
     { header: 'Requested Amount', field: 'requestedAmount', type: 'number' },
     { header: 'Requested Tenure', field: 'requestedTenure', type: 'number' },
-    { header: 'Interest Rate', field: 'interestRate', type: 'number' },
-    { header: 'Status', field: 'status', type: 'text' },
+
     {
       header: 'Actions',
       field: 'actions',
       type: 'button',
-      buttonText: 'AddemI',
+      buttonText: 'Add EMI',
       buttonVariant: 'primary',
       buttonAction: (row: any) => this.openAddEMIModal(row),
     },
   ];
 
-  // emiForm: FormGroup;
-
   private loanService = inject(LoanService);
+  private repayment = inject(RepaymentService);
   private nzMessage = inject(NzMessageService);
   private fb = inject(FormBuilder);
 
-  // constructor() {
-  //   this.emiForm = this.fb.group({
-  //     tenureInMonths: ['', [Validators.required, Validators.min(1)]],
-  //     interestRate: ['', [Validators.required, Validators.min(0)]],
-  //     loanAmount: ['', [Validators.required, Validators.min(1)]],
-  //     startDate: ['', Validators.required],
-  //   });
-  // }
   emiForm!: FormGroup;
 
   ngOnInit(): void {
     this.emiForm = this.fb.group({
+      loanId: [null, [Validators.required, Validators.min(1)]],
       loanAmount: [null, [Validators.required, Validators.min(1)]],
       interestRate: [null, [Validators.required, Validators.min(0.01)]],
       tenureInMonths: [null, [Validators.required, Validators.min(1)]],
@@ -72,30 +66,11 @@ export class CreateloanComponent implements OnInit {
     this.fetchLoans();
   }
 
-  // fetchLoans() {
-  //   this.loading = true;
-  //   this.loanService.getAllLoans().subscribe({
-  //     next: (data: any) => {
-  //       this.loans = data;
-  //       this.loading = false;
-  //     },
-  //     error: () => {
-  //       this.loading = false;
-  //     },
-  //   });
-  // }
   fetchLoans() {
     this.loading = true;
-    const emiPlans = JSON.parse(localStorage.getItem('emiPlans') || '[]');
-
     this.loanService.getAllLoans().subscribe({
       next: (data: any[]) => {
-        this.loans = data.map((loan) => ({
-          ...loan,
-          hasEMIPlan: emiPlans.some(
-            (plan: any) => plan.loanApplicationId === loan.id
-          ),
-        }));
+        this.loans = data;
         this.loading = false;
       },
       error: () => {
@@ -104,18 +79,10 @@ export class CreateloanComponent implements OnInit {
     });
   }
 
-  // openAddEMIModal(row: any) {
-  //   this.selectedLoanId = row.id;
-  //   this.emiForm.patchValue({
-  //     tenureInMonths: row.requestedTenure || '',
-  //     interestRate: row.interestRate || '',
-  //     loanAmount: row.requestedAmount || '',
-  //     startDate: new Date().toISOString().split('T')[0],
-  //   });
-  //   this.showEMIModal = true;
-  // }
   openAddEMIModal(loan: any) {
+    this.selectedLoanId = loan.loanApplicationId; // Set before initializing the form
     this.emiForm = this.fb.group({
+      loanId: [this.selectedLoanId, [Validators.required, Validators.min(1)]],
       loanAmount: [
         loan.requestedAmount,
         [Validators.required, Validators.min(1)],
@@ -133,7 +100,6 @@ export class CreateloanComponent implements OnInit {
         [Validators.required],
       ],
     });
-    this.selectedLoanId = loan.id || loan.loanApplicationId;
     this.showEMIModal = true;
   }
 
@@ -143,56 +109,29 @@ export class CreateloanComponent implements OnInit {
     this.emiForm.reset();
   }
 
-  // submitEMIPlan() {
-  //   if (this.emiForm.valid && this.selectedLoanId) {
-  //     const emiData = {
-  //       loanId: this.selectedLoanId,
-  //       tenureInMonths: this.emiForm.value.tenureInMonths,
-  //       interestRate: this.emiForm.value.interestRate,
-  //       loanAmount: this.emiForm.value.loanAmount,
-  //       startDate: this.emiForm.value.startDate,
-  //     };
-
-  //     this.loading = true;
-  //     this.loanService.generateEMIPlan(this.selectedLoanId, emiData).subscribe({
-  //       next: () => {
-  //         this.closeEMIModal();
-  //         this.fetchLoans(); // Refresh the loan list
-  //         // You might want to add a success notification here
-  //       },
-  //       error: (err) => {
-  //         console.error('Error generating EMI plan:', err);
-  //         this.loading = false;
-  //         // You might want to add an error notification here
-  //       },
-  //     });
-  //   }
-  // }
-  submitEMIPlan(): void {
-    if (this.emiForm.valid && this.selectedLoanId) {
-      const existingPlans = JSON.parse(
-        localStorage.getItem('emiPlans') || '[]'
-      );
-      const alreadyExists = existingPlans.some(
-        (plan: any) => plan.loanApplicationId === this.selectedLoanId
-      );
-      if (alreadyExists) {
-        this.nzMessage.warning('EMI plan already exists for this loan!');
-        return;
-      }
-      const emiPlan = {
-        id: new Date().getTime(),
-        loanApplicationId: this.selectedLoanId,
-        ...this.emiForm.value,
+  submitEMIPlan() {
+    if (this.emiForm.valid) {
+      const emiData = {
+        loanId: this.emiForm.value.loanApplicationId,
+        tenureInMonths: this.emiForm.value.tenureInMonths,
+        interestRate: this.emiForm.value.interestRate,
+        loanAmount: this.emiForm.value.loanAmount,
+        startDate: this.emiForm.value.startDate,
       };
-      existingPlans.push(emiPlan);
-      localStorage.setItem('emiPlans', JSON.stringify(existingPlans));
-      this.showEMIModal = false;
-      this.fetchLoans();
-      this.emiForm.reset();
-      this.nzMessage.success('EMI plan saved locally!');
-    } else {
-      this.emiForm.markAllAsTouched();
+
+      this.loading = true;
+      this.repayment.postEmi(emiData).subscribe({
+        next: (response) => {
+          console.log('EmiData:', response);
+          this.nzMessage.success('EMI plan generated and saved!');
+          this.closeEMIModal();
+          this.fetchLoans();
+        },
+        error: (err) => {
+          console.error('Error generating EMI plan:', err.message);
+          this.loading = false;
+        },
+      });
     }
   }
 }

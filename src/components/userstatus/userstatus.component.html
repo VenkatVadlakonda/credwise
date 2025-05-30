@@ -9,33 +9,43 @@
     <ng-template #actionTemplate let-item>
       <app-button
         *ngIf="
-          item.Status === 'Pending' ||
-          item.Status === 'In Processing' ||
-          item.Status === 'Decision Pending'
+          item.status === 'Pending' ||
+          item.status === 'In Processing' ||
+          item.status === 'Decision Pending'
         "
         label="Approve"
         variant="primary"
         (click)="approveLoan(item)"
-        [ngStyle]="{ padding: '2px',width:'auto', margin: '2px', fontSize: '12px' }"
+        [ngStyle]="{
+          padding: '2px',
+          width: 'auto',
+          margin: '2px',
+          fontSize: '12px'
+        }"
       ></app-button>
       <app-button
         *ngIf="
-          item.Status === 'Pending' ||
-          item.Status === 'In Processing' ||
-          item.Status === 'Decision Pending'
+          item.status === 'Pending' ||
+          item.status === 'In Processing' ||
+          item.status === 'Decision Pending'
         "
         label="Reject"
         variant="secondary"
         (click)="rejectLoan(item)"
-        [ngStyle]="{padding: '2px',width:'auto', margin: '2px', fontSize: '12px' }"
+        [ngStyle]="{
+          padding: '2px',
+          width: 'auto',
+          margin: '2px',
+          fontSize: '12px'
+        }"
       ></app-button>
       <span
-        *ngIf="item.Status === 'Approved'"
+        *ngIf="item.status === 'Approved'"
         style="color: green; font-weight: bold"
         >Approved</span
       >
       <span
-        *ngIf="item.Status === 'Rejected'"
+        *ngIf="item.status === 'Rejected'"
         style="color: red; font-weight: bold"
         >Rejected</span
       >

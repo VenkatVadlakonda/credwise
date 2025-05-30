@@ -16,20 +16,17 @@ import { LoanType } from '../../_models/loans.model';
 })
 export class DashboardComponent implements OnInit {
   loanType: LoanType[] = [];
-  emiplans: any;
 
   private loanTypeService = inject(LoanProductService);
   private loanService = inject(LoanService);
-currentSlide: any;
+  currentSlide: any;
 
   ngOnInit(): void {
-    this.loanTypeService.getAllLoanType().subscribe((response) => {
+    this.loanTypeService.getAllProduct().subscribe((response) => {
       console.log(response);
       if (response && Array.isArray(response.data)) {
         this.loanType = response.data;
       }
     });
-
-    this.emiplans = this.loanService.getEmiPlans();
   }
 }

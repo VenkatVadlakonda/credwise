@@ -10,9 +10,8 @@ export class FDTypeService {
   private apiUrl = 'https://localhost:7001/api/FDType';
 
   constructor(private http: HttpClient) { }
-
-  getAll(): Observable<FDType[]> {
-    return this.http.get<FDType[]>(this.apiUrl);
+  getAll(includeInactive: boolean = true): Observable<FDType[]> {
+    return this.http.get<FDType[]>(`${this.apiUrl}?includeInactive=${includeInactive}`);
   }
 
   getById(id: number): Observable<FDType> {
@@ -23,5 +22,8 @@ export class FDTypeService {
     return this.http.put<FDType>(`${this.apiUrl}/${id}`, data);
   }
 
+  toggleStatus(id: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}/status`, {});
+  }
  
 }

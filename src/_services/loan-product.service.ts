@@ -12,18 +12,16 @@ export class LoanProductService {
 
   constructor(private http: HttpClient) {}
 
-  getAllLoanType(): Observable<{success:string,data:LoanType[],message:string}> {
-    return this.http.get<{success:string,data:LoanType[],message:string}>(this.apiUrl);
-  }
+  
 
-  getAll(includeInactive: boolean = true): Observable<LoanProduct[]> {
+  getAllProduct(): Observable<{success:string,data:LoanType[],message:string}> {
     // return this.http.get<LoanProduct[]>(${this.apiUrl}?includeInactive=${includeInactive});
-    return this.http.get<LoanProduct[]>(`${this.apiUrl}?includeInactive=${includeInactive}`);
+    return this.http.get<{success:string,data:LoanType[],message:string}>(`${this.apiUrl}`);
   }
 
-  update(id: number, data: any): Observable<LoanProduct> {
-    return this.http.put<LoanProduct>(`${this.apiUrl}/${id}`, data);
-  }
+  // update(id: number, data: any): Observable<LoanProduct> {
+  //   return this.http.put<LoanProduct>(`${this.apiUrl}/${id}`, data);
+  // }
 
   deactivate(id: number): Observable<any> {
 //     return this.http.delete<any>(`https://localhost:7001/api/LoanProduct/${id}/status
@@ -38,13 +36,19 @@ return this.http.put<any>(`https://localhost:7001/api/LoanProduct/${id}/status`,
   getPersonalLoanById(id: number):Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
+   getAll(includeInactive: boolean = true): Observable<{success:string,data:LoanProduct[],message:string}> {
+    // return this.http.get<LoanProduct[]>(${this.apiUrl}?includeInactive=${includeInactive});
+    return this.http.get<{success:string,data:LoanProduct[],message:string}>(`${this.apiUrl}?includeInactive=${includeInactive}`);
+  }
 
   updatePersonalLoan(id: number, data: any):Observable<any> {
     return this.http.put<any>(`https://localhost:7001/api/LoanProduct/personal/${id}`, data);
   }
+
   getHomeLoanById(id: number):Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   } 
+  
   updateHomeLoan(id: number, data: any):Observable<any> {
     return this.http.put<any>(`https://localhost:7001/api/LoanProduct/home/${id}`, data);
   } 

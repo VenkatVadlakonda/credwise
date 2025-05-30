@@ -19,17 +19,19 @@
         <td>{{ loan.maxLoanAmount }}</td>
         <td>{{ loan.loanType }}</td>
         <td>
-          <button nz-button nzType="primary" (click)="openEditModal(loan)" >
-            Modify
-          </button>
-          <button
-            nz-button
-            [nzType]="loan.isActive ? 'default' : 'primary'"
-            [nzDanger]="loan.isActive"
-            (click)="toggleActiveStatus(loan)"
-          >
-            {{ loan.isActive ? 'Deactivate' : 'Activate' }}
-          </button>
+          <div style="display: flex; gap: 8px;">
+            <button nz-button nzType="primary" (click)="openEditModal(loan)">
+              Modify
+            </button>
+            <button
+              nz-button
+              [nzType]="loan.isActive ? 'default' : 'primary'"
+              [nzDanger]="loan.isActive"
+              (click)="toggleActiveStatus(loan)"
+            >
+              {{ loan.isActive ? 'Deactivate' : 'Activate' }}
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -55,8 +57,8 @@
 
         <div class="form-group">
           <label>Image URL</label>
-          <input nz-input formControlName="image" />
-          <div *ngIf="editForm.get('image')?.invalid && editForm.get('image')?.touched" class="error-message">
+          <input nz-input formControlName="imageUrl" />
+          <div *ngIf="editForm.get('imageUrl')?.invalid && editForm.get('imageUrl')?.touched" class="error-message">
             Image URL is required
           </div>
         </div>

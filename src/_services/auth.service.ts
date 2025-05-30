@@ -30,7 +30,7 @@ export class AuthService {
   logout(): void {
     this.currentUserSubject.next(null);
     this.tokenSubject.next(null); 
-    // this.router.navigate(['/signin']);
+    this.router.navigate(['/dashboard']);
   }
 
   getCurrentUser(): Admin | null {

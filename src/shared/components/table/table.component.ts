@@ -34,8 +34,9 @@ export class TableComponent {
   @Input() data: any[] = [];
   @Input() loading: boolean = false;
   @Input() actions: boolean = false;
-  @ContentChild('actionTemplate') actionTemplate?: TemplateRef<any>;
+  // @ContentChild('actionTemplate') actionTemplate?: TemplateRef<any>;
   @Output() rowClick = new EventEmitter<any>();
+  @Input() actionTemplate?: TemplateRef<any>;
 
   onRowClick(row: any): void {
     this.rowClick.emit(row);
