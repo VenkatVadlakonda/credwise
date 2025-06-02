@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { RouterModule } from '@angular/router';
+import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
 
 @Component({
   selector: 'app-loantypes',
@@ -29,8 +30,9 @@ import { RouterModule } from '@angular/router';
     RouterModule,
     NzSwitchModule,
     FormsModule,
-    NzTableModule,
-  ],
+    NzTableModule
+
+],
   templateUrl: './loantypes.component.html',
   styleUrl: './loantypes.component.scss',
 })

@@ -46,7 +46,13 @@ nz-modal form {
   justify-content: center;
   z-index: 1000;
 }
-
+  nz-table th{
+    background-color: #3F3D3D;
+    color:white;
+  }
+  nz-table{
+    border: none;
+  }
 .custom-modal {
   background: #fff;
   border-radius: 10px;

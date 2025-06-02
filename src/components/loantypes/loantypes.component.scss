@@ -1,19 +1,23 @@
 .form-group {
-    margin-bottom: 16px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-  }
-  
-  .error-message {
-    color: #ff4d4f;
-    font-size: 12px;
-    margin-top: 4px;
-  }
-  
-  textarea {
-    width: 100%;
-  }
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.error-message {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+textarea {
+  width: 100%;
+}
+nz-table th {
+  background-color: #3F3D3D;
+  color: white;
+}
