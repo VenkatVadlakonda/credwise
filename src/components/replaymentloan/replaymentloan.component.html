@@ -9,7 +9,7 @@
     
   >
     <ng-template #actionTemplate let-item>
-      <button class="btn btn-primary" (click)="addPenalty(item)">
+      <button class="btn btn-primary" (click)="addPenalty(item)" [disabled]="item.status=='Pending' || item.status=='Paid'">
         Add Fine
       </button>
       <!-- <span *ngIf="item.status !== 'Overdue'">{{ item.status }}</span> -->

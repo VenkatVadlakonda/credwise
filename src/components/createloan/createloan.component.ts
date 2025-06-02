@@ -31,7 +31,7 @@ export class CreateloanComponent implements OnInit {
   columns: TableColumn[] = [
     { header: 'Loan ID', field: 'loanApplicationId', type: 'text' },
     { header: 'User ID', field: 'userId', type: 'text' },
-    { header: 'User ID', field: 'userId', type: 'text' },
+    
     { header: 'Gender', field: 'gender', type: 'text' },
     { header: 'EmploymentType', field: 'employmentType', type: 'text' },
     { header: 'Loan Product ID', field: 'loanProductId', type: 'text' },
@@ -45,6 +45,7 @@ export class CreateloanComponent implements OnInit {
       buttonText: 'Add EMI',
       buttonVariant: 'primary',
       buttonAction: (row: any) => this.openAddEMIModal(row),
+      
     },
   ];
 
@@ -129,6 +130,7 @@ export class CreateloanComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error generating EMI plan:', err.message);
+          alert("EMI Plan Already Exists")
           this.loading = false;
         },
       });

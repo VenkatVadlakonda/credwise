@@ -13,6 +13,7 @@ export class ChartComponent implements OnDestroy {
   @ViewChild('loanTypeChart') loanTypeChart!: ElementRef<HTMLDivElement>;
   @ViewChild('genderChart') genderChart!: ElementRef<HTMLDivElement>;
   @ViewChild('employmentChart') employmentChart!: ElementRef<HTMLDivElement>;
+  @ViewChild('chartWrapper') chartWrapper!: ElementRef<HTMLDivElement>;
 
   loading = true;
   error: string | null = null;
@@ -47,16 +48,26 @@ export class ChartComponent implements OnDestroy {
 
   loadGoogleChartsScript(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if ((window as any).google?.charts) {
-        resolve();
-        return;
+      if ((window as any).google?.charts?.load) {
+        (window as any).google.charts.load('current', {
+          packages: ['corechart'],
+        });
+        (window as any).google.charts.setOnLoadCallback(() => resolve());
+      } else if ((window as any).google?.charts) {
+        resolve(); // Already loaded
+      } else {
+        const script = document.createElement('script');
+        script.src = 'https://www.gstatic.com/charts/loader.js';
+        script.onload = () => {
+          (window as any).google.charts.load('current', {
+            packages: ['corechart'],
+          });
+          (window as any).google.charts.setOnLoadCallback(() => resolve());
+        };
+        script.onerror = () =>
+          reject(new Error('Failed to load Google Charts'));
+        document.head.appendChild(script);
       }
-
-      const script = document.createElement('script');
-      script.src = 'https://www.gstatic.com/charts/loader.js';
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error('Failed to load Google Charts'));
-      document.head.appendChild(script);
     });
   }
 

@@ -49,6 +49,7 @@ export class AppComponent {
   ngOnInit() {
     const allUsers = this.userService.userDetails;
 
+
     // Option 1: Check for recently created users (e.g., today)
     const today = new Date().toISOString().split('T')[0];
     this.showDot = allUsers.some((user) => user.createdAt === today);
@@ -58,6 +59,7 @@ export class AppComponent {
       console.log('current:', user);
       this.currentUser = user;
     });
+    
   }
   
   
